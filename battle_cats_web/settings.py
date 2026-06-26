@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Вмикаємо WhiteNoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -115,18 +115,22 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
-# Перевірте, чи в INSTALLED_APPS вгорі файлу додано 'wiki'
-STATIC_URL = 'static/'
 
-# Цей рядок змусить Django автоматично знаходити стилі всередині додатків
+STATIC_URL = '/static/'
+
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-# Надійний шлях до головної папки static
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "wiki" / "static", # Вказуємо точний шлях до статики всередині wiki
 ]
 
+# ОЦІ РЯДКИ ПОВЕРНУТЬ ДИЗАЙН НА ХОСТИНГУ:
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Налаштування для майбутніх картинок котів
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
