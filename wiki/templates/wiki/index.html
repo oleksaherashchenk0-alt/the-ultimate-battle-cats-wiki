@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Battle Cats Wiki | By: Huki</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <div class="wiki-header">
+        <div class="header-left">
+            <img src="{% static 'images/wiki_logo.png' %}" alt="Wiki logo" class="wiki-logo">
+            <div class="header-text">
+                <h1 data-i18n="site_title">The Battle Cats Wiki</h1>
+                <p data-i18n="site_subtitle">Welcome to the cat encyclopedia. | By: Huki</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="lang-switch">
+                <button class="lang-btn" type="button" id="langBtn" onclick="document.getElementById('langDropdown').classList.toggle('open')">EN ▾</button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" onclick="setLanguage('en'); return false;">English</a>
+                    <a href="#" onclick="setLanguage('de'); return false;">Deutsch</a>
+                    <a href="#" onclick="setLanguage('es'); return false;">Español</a>
+                    <a href="#" onclick="setLanguage('ja'); return false;">日本語</a>
+                </div>
+            </div>
+
+            <img src="{% static 'images/falling.gif' %}" alt="cat gif" class="header-gif">
+        </div>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <div class="cat-container">
+
+        <div class="battle-cats-btn btn-shifted-left">
+            <img src="{% static 'images/cat_icon.png' %}" alt="cat icon" class="btn-cat-icon">
+            <span class="battle-cats-font" id="catDictBtnText" data-i18n="cat_dictionary">Units</span>
+        </div>
+
+        {% for cat in cats %}
+        <div class="cat-card">
+            
+            {% if cat.image %}
+                <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
+            {% else %}
+                <img src="https://miraheze.org" class="cat-img" alt="No image">
+            {% endif %}
+
+            <div class="cat-info">
+                <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
+                
+                <p>
+                    <span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span>
+                    <span class="stats-badge"><strong>HP:</strong> {{ cat.hp_stat }}</span>
+                    <span class="stats-badge"><strong>DPS:</strong> {{ cat.dps_stat }}</span>
+                </p>
+                
+                <div style="background-color: #eee; padding: 10px; border-left: 4px solid #333; margin: 10px 0;">
+                    <strong data-i18n="desc_strategy">Description & Strategy:</strong>
+                    <p style="margin: 5px 0;">{{ cat.content|slice:":150" }}...</p>
+                </div>
+                
+                <small style="color: #888;"><span data-i18n="author_label">Author:</span> {{ cat.author.username }}</small>
+            </div>
+        </div>
+        {% empty %}
+            <p data-i18n="no_cats_found">No cats found in the database. Go to admin panel to add some!</p>
+        {% endfor %}
+    </div>
+
+    <script type="text/javascript">
+        const DICTIONARY = {
+            site_title: {
+                en: "The Battle Cats Wiki",
+                de: "Das Battle Cats Wiki",
+                es: "La Wiki de Battle Cats",
+                ja: "バトルキャッツWiki"
+            },
+            site_subtitle: {
+                en: "Welcome to the cat encyclopedia. | By: Huki",
+                de: "Willkommen in der Katzen-Enzyklopädie. | Von: Huki",
+                es: "Bienvenido a la enciclopedia felina. | Por: Huki",
+                ja: "猫百科事典へようこそ。| 作成者：Huki"
+            },
+            cat_dictionary: {
+                en: "Units",
+                de: "Einheiten",
+                es: "Unidades",
+                ja: "ユニット"
+            },
+            rarity_label: {
+                en: "Rarity:",
+                de: "Seltenheit:",
+                es: "Rareza:",
+                ja: "レア度："
+            },
+            desc_strategy: {
+                en: "Description & Strategy:",
+                de: "Beschreibung & Strategie:",
+                es: "Descripción y Estrategia:",
+                ja: "説明と戦略："
+            },
+            author_label: {
+                en: "Author:",
+                de: "Autor:",
+                es: "Autor:",
+                ja: "作者："
+            },
+            no_cats_found: {
+                en: "No cats found in the database. Go to admin panel to add some!",
+                de: "Keine Katzen in der Datenbank gefunden. Geh ins Admin-Panel, um welche hinzuzufügen!",
+                es: "No se encontraron gatos en la base de datos. ¡Ve al panel de administración para añadir algunos!",
+                ja: "データベースに猫のデータが見つかりませんでした。管理パネルから猫を追加してください！"
+            }
+        };
+
+        const LANG_BUTTON_LABELS = { en: "EN ▾", de: "DE ▾", es: "ES ▾", ja: "JA ▾" };
+
+        function setLanguage(langCode) {
+            document.querySelectorAll('[data-i18n]').forEach(function (el) {
+                var key = el.getAttribute('data-i18n');
+                if (DICTIONARY[key] && DICTIONARY[key][langCode]) {
+                    el.textContent = DICTIONARY[key][langCode];
+                }
+            });
+
+            document.getElementById('langBtn').textContent = LANG_BUTTON_LABELS[langCode];
+
+            var catDictText = document.getElementById('catDictBtnText');
+            if (langCode === 'ja') {
+                catDictText.classList.add('jp-text');
+            } else {
+                catDictText.classList.remove('jp-text');
+            }
+
+            document.documentElement.setAttribute('lang', langCode);
+            document.getElementById('langDropdown').classList.remove('open');
+
+            localStorage.setItem('chosenLang', langCode);
+        }
+
+        document.addEventListener('click', function (event) {
+            var switchBlock = document.querySelector('.lang-switch');
+            if (switchBlock && !switchBlock.contains(event.target)) {
+                document.getElementById('langDropdown').classList.remove('open');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var savedLang = localStorage.getItem('chosenLang');
+            if (savedLang) {
+                setLanguage(savedLang);
+            }
+        });
+    </script>
+
+</body>
+</html>
