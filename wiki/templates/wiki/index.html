@@ -37,10 +37,10 @@
 
     <div class="cat-container">
 
-        <div class="battle-cats-btn btn-shifted-left">
+        <a href="{% url 'units_menu' %}" class="battle-cats-btn btn-shifted-left">
             <img src="{% static 'images/cat_icon.png' %}" alt="cat icon" class="btn-cat-icon">
             <span class="battle-cats-font" id="catDictBtnText" data-i18n="cat_dictionary">Units</span>
-        </div>
+        </a>
 
         {% for cat in cats %}
         <div class="cat-card">
@@ -73,91 +73,7 @@
         {% endfor %}
     </div>
 
-    <script type="text/javascript">
-        const DICTIONARY = {
-            site_title: {
-                en: "The Battle Cats Wiki",
-                de: "Das Battle Cats Wiki",
-                es: "La Wiki de Battle Cats",
-                ja: "バトルキャッツWiki"
-            },
-            site_subtitle: {
-                en: "Welcome to the cat encyclopedia. | By: Huki",
-                de: "Willkommen in der Katzen-Enzyklopädie. | Von: Huki",
-                es: "Bienvenido a la enciclopedia felina. | Por: Huki",
-                ja: "猫百科事典へようこそ。| 作成者：Huki"
-            },
-            cat_dictionary: {
-                en: "Units",
-                de: "Einheiten",
-                es: "Unidades",
-                ja: "ユニット"
-            },
-            rarity_label: {
-                en: "Rarity:",
-                de: "Seltenheit:",
-                es: "Rareza:",
-                ja: "レア度："
-            },
-            desc_strategy: {
-                en: "Description & Strategy:",
-                de: "Beschreibung & Strategie:",
-                es: "Descripción y Estrategia:",
-                ja: "説明と戦略："
-            },
-            author_label: {
-                en: "Author:",
-                de: "Autor:",
-                es: "Autor:",
-                ja: "作者："
-            },
-            no_cats_found: {
-                en: "No cats found in the database. Go to admin panel to add some!",
-                de: "Keine Katzen in der Datenbank gefunden. Geh ins Admin-Panel, um welche hinzuzufügen!",
-                es: "No se encontraron gatos en la base de datos. ¡Ve al panel de administración para añadir algunos!",
-                ja: "データベースに猫のデータが見つかりませんでした。管理パネルから猫を追加してください！"
-            }
-        };
-
-        const LANG_BUTTON_LABELS = { en: "EN ▾", de: "DE ▾", es: "ES ▾", ja: "JA ▾" };
-
-        function setLanguage(langCode) {
-            document.querySelectorAll('[data-i18n]').forEach(function (el) {
-                var key = el.getAttribute('data-i18n');
-                if (DICTIONARY[key] && DICTIONARY[key][langCode]) {
-                    el.textContent = DICTIONARY[key][langCode];
-                }
-            });
-
-            document.getElementById('langBtn').textContent = LANG_BUTTON_LABELS[langCode];
-
-            var catDictText = document.getElementById('catDictBtnText');
-            if (langCode === 'ja') {
-                catDictText.classList.add('jp-text');
-            } else {
-                catDictText.classList.remove('jp-text');
-            }
-
-            document.documentElement.setAttribute('lang', langCode);
-            document.getElementById('langDropdown').classList.remove('open');
-
-            localStorage.setItem('chosenLang', langCode);
-        }
-
-        document.addEventListener('click', function (event) {
-            var switchBlock = document.querySelector('.lang-switch');
-            if (switchBlock && !switchBlock.contains(event.target)) {
-                document.getElementById('langDropdown').classList.remove('open');
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var savedLang = localStorage.getItem('chosenLang');
-            if (savedLang) {
-                setLanguage(savedLang);
-            }
-        });
-    </script>
+    <script src="{% static 'js/translations.js' %}"></script>
 
 </body>
 </html>

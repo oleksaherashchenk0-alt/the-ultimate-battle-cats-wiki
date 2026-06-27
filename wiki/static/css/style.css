@@ -1,6 +1,14 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0c121f;
+    
+    /* ОЦІ РЯДКИ СТВОРЮЮТЬ КРУТИЙ ІГРОВИЙ ФОН ПО БОКАХ, ЯК НА СКРИНШОТІ: */
+    background-image: url('../images/bgcats.png'); /* Підключаємо твою картинку фону */
+    background-color: #0c121f; /* Світло-синій підстраховочний колір, якщо картинка довго вантажиться */
+    background-position: center center; /* Картинка завжди центрована */
+    background-repeat: no-repeat; /* Зображення не буде розмножуватися плиткою */
+    background-size: cover; /* Картинка ідеально розтягується під будь-який монітор */
+    background-attachment: fixed; /* Фон застигає на місці при прокручуванні сайту */
+    
     margin: 0;
     padding: 20px;
     color: #ffffff;
@@ -137,9 +145,13 @@ body {
     background: #3a4f78;
 }
 
+/* КОНТЕЙНЕРИ ЗАЛИШАЮТЬСЯ ПО ЦЕНТРУ І СТВОРЮЮТЬ ПРОСТІР ДЛЯ ФОНУ ПО БОКАХ */
 .cat-container {
     max-width: 1000px;
     margin: 0 auto;
+    background: rgba(12, 18, 31, 0.85); /* Легке затемнення під текстом, щоб фон не заважав читати */
+    padding: 20px;
+    border-radius: 8px;
 }
 
 .battle-cats-btn {
@@ -229,4 +241,90 @@ body {
     margin-right: 10px;
     border: 1px solid #3a4b6e;
     display: inline-block;
+}
+
+/* ========================================================
+   СТИЛІ ДЛЯ СТОРІНКИ КАТАЛОГУ (ПРОСТІР ПО БОКАХ ТА СВІТЛІШІ КАРТКИ)
+   ======================================================== */
+
+.menu-page-container {
+    max-width: 650px;
+    margin: 30px auto;
+    padding: 25px;
+    background: rgba(12, 18, 31, 0.9); /* Додали напівпрозорий темний фон для читабельності */
+    border-radius: 12px;
+    border: 2px solid #3a4b6e;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+/* Стиль сітки кнопок Клода */
+.rarity-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rarity-btn {
+    background: linear-gradient(to bottom, #ff6a00, #e64a00);
+    border: 4px solid #000000;
+    border-radius: 10px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    box-shadow: 0 4px 0 #000000;
+    cursor: pointer;
+}
+
+.rarity-btn:hover {
+    animation: blink-border 0.15s linear infinite;
+}
+
+.rarity-icon {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+.menu-cat-card {
+    background: #243147; 
+    border: 2px solid #4a618c;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.menu-cat-img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    background: #0d1527;
+    border: 2px solid #4a618c;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+.menu-cat-info h3 a {
+    color: #ffaa00;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.menu-cat-info h3 a:hover {
+    text-decoration: underline;
+}
+
+.back-link, .back-btn {
+    color: #ff6a00;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-link:hover, .back-btn:hover {
+    text-decoration: underline;
 }

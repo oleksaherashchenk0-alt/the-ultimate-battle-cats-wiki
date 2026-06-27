@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Units Menu | Battle Cats Wiki</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <div class="wiki-header">
+        <div class="header-left">
+            <img src="{% static 'images/wiki_logo.png' %}" alt="Wiki logo" class="wiki-logo">
+            <div class="header-text">
+                <h1 data-i18n="site_title">The Battle Cats Wiki</h1>
+                <p data-i18n="site_subtitle">Welcome to the cat encyclopedia. | By: Huki</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="lang-switch">
+                <button class="lang-btn" type="button" id="langBtn" onclick="document.getElementById('langDropdown').classList.toggle('open')">EN ▾</button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" onclick="setLanguage('en'); return false;">English</a>
+                    <a href="#" onclick="setLanguage('de'); return false;">Deutsch</a>
+                    <a href="#" onclick="setLanguage('es'); return false;">Español</a>
+                    <a href="#" onclick="setLanguage('ja'); return false;">日本語</a>
+                </div>
+            </div>
+
+            <img src="{% static 'images/falling.gif' %}" alt="cat gif" class="header-gif">
+        </div>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <div class="menu-page-container">
+        
+        <div style="margin-bottom: 25px;">
+            <a href="{% url 'home' %}" class="back-btn">
+                <span class="battle-cats-font" data-i18n="back_to_main">&larr; Back to Main Page</span>
+            </a>
+        </div>
+
+        <h2 class="battle-cats-font" style="margin-bottom: 25px;" data-i18n="units_catalog_title">Cat Units Catalog</h2>
+
+        <!-- Посилання тепер ведуть на сторінку cats_list з конкретним фільтром рідкісності -->
+        <div class="rarity-grid">
+            <a href="{% url 'cats_list' %}?rarity=normal" class="rarity-btn">
+                <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--normal" alt="Normal">
+                <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_normal">Normal Cats</span>
+            </a>
+            <a href="{% url 'cats_list' %}?rarity=special" class="rarity-btn">
+                <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--special" alt="Special">
+                <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_special">Special Cats</span>
+            </a>
+            <a href="{% url 'cats_list' %}?rarity=rare" class="rarity-btn">
+                <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--rare" alt="Rare">
+                <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_rare">Rare Cats</span>
+            </a>
+            <a href="{% url 'cats_list' %}?rarity=super_rare" class="rarity-btn">
+                <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--super-rare" alt="Super Rare">
+                <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_super_rare">Super Rare Cats</span>
+            </a>
+            <a href="{% url 'cats_list' %}?rarity=uber_rare" class="rarity-btn">
+                <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--uber" alt="Uber Rare">
+                <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_uber">Uber Rare Cats</span>
+            </a>
+            <a href="{% url 'cats_list' %}?rarity=legend_rare" class="rarity-btn">
+                <div class="rarity-icon-wrap--legend">
+                    <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--legend" alt="Legend Rare">
+                </div>
+                <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_legend">Legend Rare Cats</span>
+            </a>
+            <a href="{% url 'cats_list' %}?rarity=limited" class="rarity-btn">
+                <div class="rarity-icon-wrap--limited">
+                    <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--limited" alt="Limited">
+                </div>
+                <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_limited">Limited Cats</span>
+            </a>
+        </div>
+
+    </div>
+
+    <script src="{% static 'js/translations.js' %}"></script>
+
+</body>
+</html>

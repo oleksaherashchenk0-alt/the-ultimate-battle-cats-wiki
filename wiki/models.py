@@ -12,11 +12,15 @@ class BattleCat(models.Model):
     is_published = models.BooleanField(default=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    # Додали всі рідкісності, які є на твоїх кнопках меню
     RARITY_CHOICES = [
         ('normal', 'Normal Cat'),
+        ('special', 'Special Cat'),
         ('rare', 'Rare Cat'),
         ('super_rare', 'Super Rare Cat'),
         ('uber_rare', 'Uber Rare Cat'),
+        ('legend_rare', 'Legend Rare Cat'),
+        ('limited', 'Limited Cat'),
     ]
     status = models.CharField(max_length=20, choices=RARITY_CHOICES, default='normal')
 

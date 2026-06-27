@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ cat.title }} | Battle Cats Wiki</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- Шапка сайта з логотипом -->
+    <div class="wiki-header">
+        <div class="header-left">
+            <img src="{% static 'images/wiki_logo.png' %}" alt="Wiki logo" class="wiki-logo">
+            <div class="header-text">
+                <h1>The Battle Cats Wiki</h1>
+                <p>Welcome to the cat encyclopedia. | By: Huki</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <!-- ГОЛОВНИЙ КОНТЕЙНЕР (Створює красивий простір по боках, як на фото 3) -->
+    <div class="detail-container">
+        
+        <div style="margin-bottom: 20px;">
+            <!-- Посилання повертає нас у меню юнітів -->
+            <a href="{% url 'units_menu' %}" class="back-link">&larr; Back to Units Menu</a>
+        </div>
+
+        <!-- КАРТКА ЮНІТА (Світліший металевий відтінок, як на фото 2) -->
+        <div class="unit-detail-card">
+            
+            <div class="unit-header-block">
+                {% if cat.image %}
+                    <img src="{{ cat.image.url }}" class="detail-cat-img" alt="{{ cat.title }}">
+                {% else %}
+                    <img src="https://miraheze.org" class="detail-cat-img" alt="No image">
+                {% endif %}
+                
+                <h1 class="unit-detail-title">{{ cat.title }}</h1>
+            </div>
+
+            <!-- Таблиця характеристик -->
+            <table class="detail-stats-table">
+                <tr>
+                    <th>Rarity</th>
+                    <td>{{ cat.get_status_display }}</td>
+                </tr>
+                <tr>
+                    <th>Base HP</th>
+                    <td class="stat-hp-value">{{ cat.hp_stat }}</td>
+                </tr>
+                <tr>
+                    <th>Base DPS</th>
+                    <td class="stat-dps-value">{{ cat.dps_stat }}</td>
+                </tr>
+            </table>
+
+            <!-- Блок опису та стратегії -->
+            <div class="detail-desc-block">
+                <h3>Description & Strategy</h3>
+                <p>{{ cat.content }}</p>
+            </div>
+
+            <div class="detail-footer">
+                <small>Author: <strong>{{ cat.author.username }}</strong> | Created: {{ cat.created_at|date:"M d, Y" }}</small>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
