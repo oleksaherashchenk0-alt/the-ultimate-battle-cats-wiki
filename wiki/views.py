@@ -6,17 +6,21 @@ def home(request):
     cats = BattleCat.objects.all()
     return render(request, 'wiki/index.html', {'cats': cats})
 
-# Сторінка головного лобі-меню рідкісностей (Без списку котів)
+# Головне меню з горизонтальним рядом та висувною плашкою
 def units_menu(request):
-    return render(request, 'wiki/units_menu.html')
-
-# НОВА СТОРІНКА: Окремий екран зі списком котів вибраної рідкісності
-def cats_list(request):
-    rarity_filter = request.GET.get('rarity', 'normal')
-    cats = BattleCat.objects.filter(status=rarity_filter, is_published=True)
-    return render(request, 'wiki/cats_list.html', {
-        'cats': cats,
-        'current_rarity': rarity_filter
+    # Отримуємо списки котів окремо для кожної ігрової рідкісності
+    cats_by_rarity = {
+        'normal': BattleCat.objects.filter(status='normal', is_published=True),
+        'special': BattleCat.objects.filter(status='special', is_published=True),
+        'rare': BattleCat.objects.filter(status='rare', is_published=True),
+        'super_rare': BattleCat.objects.filter(status='super_rare', is_published=True),
+        'uber_rare': BattleCat.objects.filter(status='uber_rare', is_published=True),
+        'legend_rare': BattleCat.objects.filter(status='legend_rare', is_published=True),
+        'limited': BattleCat.objects.filter(status='limited', is_published=True),
+    }
+    
+    return render(request, 'wiki/units_menu.html', {
+        'cats_by_rarity': cats_by_rarity
     })
 
 # Особиста сторінка окремого кота (Світліший тон)

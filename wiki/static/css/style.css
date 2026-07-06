@@ -1,48 +1,64 @@
+/* ====================================================
+   ТЕМАТИКА "ПРОКЛЯТІ ДЖУНГЛІ" - темно-зелена палітра для всього сайту
+==================================================== */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    
-    /* ОЦІ РЯДКИ СТВОРЮЮТЬ КРУТИЙ ІГРОВИЙ ФОН ПО БОКАХ, ЯК НА СКРИНШОТІ: */
-    background-image: url('../images/bgcats.png'); /* Підключаємо твою картинку фону */
-    background-color: #0c121f; /* Світло-синій підстраховочний колір, якщо картинка довго вантажиться */
-    background-position: center center; /* Картинка завжди центрована */
-    background-repeat: no-repeat; /* Зображення не буде розмножуватися плиткою */
-    background-size: cover; /* Картинка ідеально розтягується під будь-який монітор */
-    background-attachment: fixed; /* Фон застигає на місці при прокручуванні сайту */
-    
+    background-color: #0d1a12; /* Темна гущавина джунглів замість синього космосу */
     margin: 0;
     padding: 20px;
     color: #ffffff;
+    position: relative;
+    overflow-x: hidden; /* щоб духи, що виходять трохи за край, не створювали горизонтальний скрол */
 }
 
+/* ====================================================
+   ШАПКА САЙТУ
+   - position: fixed -> закріплена зверху екрану (sticky)
+   - тепер вужча за весь екран, з відступами з боків, округлені кути
+   - display: flex -> гіфка+текст зліва, кнопка мови справа
+==================================================== */
 .wiki-header {
-    background: linear-gradient(to bottom, #1a263f, #0d1527);
+    background: linear-gradient(to bottom, #1b3322, #0e1f14);
     color: #fff;
     padding: 15px 25px;
-    border: 3px solid #4a618c;
-    border-top: none;
-    border-radius: 0;
+
+    border: 3px solid #3f7a4f;
+    border-radius: 10px; /* округлені кути */
+
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+
+    /* Закріплення зверху сторінки, але вужче за весь екран -
+       max-width і margin: 0 auto центрують її з відступами з боків */
     position: fixed;
-    top: 0;
+    top: 10px;
     left: 0;
     right: 0;
+    max-width: 1100px;
+    margin: 0 auto;
     z-index: 1000;
+
+    /* Розкладка: гіфка+текст зліва, кнопка мови справа */
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
 }
 
+/* Ліва частина шапки: гіфка + текст разом, щоб space-between
+   притиснув їх до лівого краю, а кнопку мови - до правого */
 .header-left {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
+/* Текст шапки тепер притиснутий до лівого краю, одразу після гіфки */
 .header-text {
     text-align: left;
 }
 
+/* Заголовок шапки тепер тим самим ігровим шрифтом з чорним контуром,
+   що і кнопка Units - єдиний стиль по всьому сайту */
 .header-text h1 {
     margin: 0;
     font-size: 28px;
@@ -58,36 +74,53 @@ body {
     font-size: 14px;
 }
 
+/* Гіфка тепер праворуч, поруч з кнопкою мови - зменшена */
 .header-gif {
     width: 36px;
     height: 36px;
     object-fit: contain;
 }
 
+/* Права частина шапки: кнопка мови + гіфка поруч */
 .header-right {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
+/* Логотип "Wiki" з котиком - компактний значок поруч із назвою сайту.
+   Слово "Wiki" не перекладається на інші мови, тому картинка лишається
+   однаковою завжди, незалежно від обраної мови */
 .wiki-logo {
-    height: 64px;
+    height: 70px;
     width: auto;
     object-fit: contain;
 }
 
-.header-spacer {
-    height: 100px;
+/* Дзеркально розвертає лого по горизонталі - котик "дивиться"
+   у бік тексту заголовка замість назовні */
+.wiki-logo-flipped {
+    transform: scaleX(-1);
 }
 
+/* Через те, що шапка стала fixed, вона "вилітає" з потоку сторінки
+   і контент під нею наїжджає зверху. Цей порожній блок -- "розпірка",
+   яка займає рівно стільки місця, скільки займала шапка раніше. */
+.header-spacer {
+    height: 110px; /* підбери цю цифру під реальну висоту своєї шапки */
+}
+
+/* ====================================================
+   КНОПКА ВИБОРУ МОВИ (праворуч у шапці, НЕ блимає)
+==================================================== */
 .lang-switch {
     position: relative;
 }
 
 .lang-btn {
-    background: #202e48;
+    background: #1f3a26;
     color: #fff;
-    border: 1px solid #4a618c;
+    border: 1px solid #3f7a4f;
     border-radius: 6px;
     padding: 8px 14px;
     font-size: 14px;
@@ -95,16 +128,18 @@ body {
 }
 
 .lang-btn:hover {
-    background: #2a3c5e;
+    background: #2a4f33;
 }
 
+/* Список мов: схований за замовчуванням, з'являється тільки коли
+   додано клас .open (керується через JS по кліку, не по hover) */
 .lang-dropdown {
     display: none;
     position: absolute;
-    top: calc(100% + 14px);
+    top: calc(100% + 14px); /* трохи нижче кнопки, є місце для хвостика */
     right: 8px;
-    background: #2a3c5e;
-    border-radius: 16px;
+    background: #2a4f33;
+    border-radius: 16px; /* округла бульбашка, як у месенджерах */
     min-width: 160px;
     overflow: visible;
     z-index: 1001;
@@ -112,11 +147,13 @@ body {
     box-shadow: 0 6px 16px rgba(0,0,0,0.4);
 }
 
+/* Цей клас додає/прибирає JS при кліку на кнопку мови */
 .lang-dropdown.open {
     display: block;
     animation: bubble-pop 0.15s ease-out;
 }
 
+/* "Хвостик" бульбашки, що вказує вгору на кнопку - як у чатах месенджерів */
 .lang-dropdown::before {
     content: "";
     position: absolute;
@@ -124,9 +161,10 @@ body {
     right: 20px;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid #2a3c5e;
+    border-bottom: 8px solid #2a4f33;
 }
 
+/* Легка анімація появи бульбашки */
 @keyframes bubble-pop {
     0%   { opacity: 0; transform: scale(0.85) translateY(-6px); }
     100% { opacity: 1; transform: scale(1) translateY(0); }
@@ -138,62 +176,73 @@ body {
     color: #fff;
     text-decoration: none;
     font-size: 14px;
-    border-radius: 12px;
+    border-radius: 12px; /* кожен пункт теж округлий, як окреме повідомлення */
 }
 
 .lang-dropdown a:hover {
-    background: #3a4f78;
+    background: #3a6647;
 }
 
-/* КОНТЕЙНЕРИ ЗАЛИШАЮТЬСЯ ПО ЦЕНТРУ І СТВОРЮЮТЬ ПРОСТІР ДЛЯ ФОНУ ПО БОКАХ */
 .cat-container {
     max-width: 1000px;
     margin: 0 auto;
-    background: rgba(12, 18, 31, 0.85); /* Легке затемнення під текстом, щоб фон не заважав читати */
-    padding: 20px;
-    border-radius: 8px;
 }
 
+/* ====================================================
+   КНОПКА Cat Dictionary (з котиком всередині, зліва від тексту)
+   Пропорції підібрані як на оригінальній Battle Cats Wiki: компактна
+   кнопка, іконка не виходить за її межі
+==================================================== */
 .battle-cats-btn {
-    background: linear-gradient(to bottom, #ff6a00, #e64a00);
+    background: linear-gradient(to bottom, #ff6a00, #e64a00); /* Помаранчевий градієнт */
     padding: 6px 18px 6px 8px;
-    border: 5px solid #000000;
-    border-radius: 8px;
+    border: 5px solid #000000; /* Товстіша чорна рамка - більш виразний контур */
+    border-radius: 8px; /* Круглі кути */
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    box-shadow: 0 3px 0px #000000;
+    gap: 8px; /* відстань між котиком і текстом */
+    box-shadow: 0 3px 0px #000000; /* Об'ємна тінь знизу кнопки */
     margin-bottom: 30px;
     cursor: pointer;
+    text-decoration: none; /* кнопка тепер <a> - прибираємо стандартне підкреслення посилання */
 }
 
+/* Зсуває кнопку майже впритул до лівого краю контейнера (залишається лише мінімальний відступ) */
 .btn-shifted-left {
     margin-left: 0;
 }
 
+/* БЛИМАННЯ РАМКИ КНОПКИ при наведенні: фіолетовий <-> жовтий, дуже швидко.
+   infinite -> триває ввесь час, поки курсор стоїть на кнопці, і одразу
+   зупиняється, як тільки мишку забрали (бо :hover перестає діяти) */
 .battle-cats-btn:hover {
     animation: blink-border 0.15s linear infinite;
 }
 
 @keyframes blink-border {
-    0%   { border-color: #a64dff; }
-    50%  { border-color: #ffe600; }
+    0%   { border-color: #a64dff; } /* фіолетовий */
+    50%  { border-color: #ffe600; } /* жовтий */
     100% { border-color: #a64dff; }
 }
 
+/* Картинка котика всередині кнопки - компактна, в межах висоти кнопки */
 .btn-cat-icon {
     width: 40px;
     height: 40px;
     object-fit: contain;
 }
 
+/* Наш ігровий шрифт. Для японської версії кнопки (через словник перекладу)
+   контур шрифту Impact однаково не підходить ієрогліфам, тому додатковий
+   клас jp-text вимикає stroke і використовує шрифт, який вміє показувати кандзі */
 .battle-cats-font {
     font-family: 'Impact', 'Arial Black', sans-serif;
     font-size: 22px;
     color: #ffffff;
-    -webkit-text-stroke: 1px #000000;
-    text-shadow: 1px 1px 0px #000000;
+    -webkit-text-stroke: 1px #000000; /* тонший контур самого тексту */
+    text-shadow: 1px 1px 0px #000000; /* менша тінь */
     letter-spacing: 1px;
+    text-decoration: none; /* прибирає підкреслення, бо текст лежить всередині <a> */
 }
 
 .battle-cats-font.jp-text {
@@ -202,9 +251,10 @@ body {
     text-shadow: 2px 2px 0px #000000, -1px -1px 0px #000000, 1px -1px 0px #000000, -1px 1px 0px #000000;
 }
 
+/* Картки майбутніх котів */
 .cat-card {
-    background: #151f32;
-    border: 2px solid #3a4b6e;
+    background: #122418;
+    border: 2px solid #2f5c3b;
     border-radius: 6px;
     padding: 20px;
     margin-bottom: 20px;
@@ -217,14 +267,14 @@ body {
     width: 120px;
     height: 120px;
     object-fit: contain;
-    background: #0d1527;
-    border: 2px solid #3a4b6e;
+    background: #0e1f14;
+    border: 2px solid #2f5c3b;
     border-radius: 6px;
     padding: 5px;
 }
 
 .cat-info h3 a {
-    color: #ffaa00;
+    color: #ffaa00; /* Золоті імена котів */
     text-decoration: none;
     font-size: 24px;
 }
@@ -234,97 +284,336 @@ body {
 }
 
 .stats-badge {
-    background: #202e48;
+    background: #1a3322;
     padding: 6px 12px;
     border-radius: 4px;
     font-size: 14px;
     margin-right: 10px;
-    border: 1px solid #3a4b6e;
+    border: 1px solid #2f5c3b;
     display: inline-block;
 }
 
-/* ========================================================
-   СТИЛІ ДЛЯ СТОРІНКИ КАТАЛОГУ (ПРОСТІР ПО БОКАХ ТА СВІТЛІШІ КАРТКИ)
-   ======================================================== */
-
-.menu-page-container {
-    max-width: 650px;
-    margin: 30px auto;
-    padding: 25px;
-    background: rgba(12, 18, 31, 0.9); /* Додали напівпрозорий темний фон для читабельності */
-    border-radius: 12px;
-    border: 2px solid #3a4b6e;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+/* Стиль для таблички знизу */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #122418;
+    border: 2px solid #2f5c3b;
+    margin-top: 15px;
+}
+th {
+    background-color: #1a3322;
+    padding: 12px;
+    border: 1px solid #2f5c3b;
+    color: #ffaa00;
+}
+td {
+    padding: 12px;
+    border: 1px solid #2f5c3b;
+    color: #fff;
 }
 
-/* Стиль сітки кнопок Клода */
-.rarity-grid {
+/* ====================================================
+   КОНТЕЙНЕР СТОРІНКИ UNITS З ФОНОВИМ ЗОБРАЖЕННЯМ ЛІСУ
+==================================================== */
+.menu-page-container {
+    max-width: 700px;
+    margin: 0 auto;
+    border: 3px solid #3f7a4f;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    position: relative; /* потрібно, щоб духи .spirit-icon коректно позиціонувались відносно сторінки, а не цього блоку */
+}
+
+.menu-page-container--forest {
+    background-image:
+        linear-gradient(rgba(13, 26, 18, 0.35), rgba(13, 26, 18, 0.55)),
+        url("/static/images/bgcats.png");
+    background-size: cover;
+    background-position: center;
+}
+
+/* ====================================================
+   ДУХИ, що літають по БОКОВИХ ПОРОЖНІХ ПОЛЯХ сторінки
+   (там, де просто темний фон, поза основним контентом) -
+   НЕ на кнопках, як на оригінальній Miraheze-вікі.
+   position: fixed -> завжди прив'язані до краю екрану,
+   а не до контенту, що скролиться.
+==================================================== */
+.spirit-icon {
+    position: fixed;
+    width: 70px;
+    height: auto;
+    opacity: 0.55;
+    pointer-events: none; /* не заважають клікати по контенту під ними */
+    z-index: 1;
+    /* Контур духу трохи світліший за темний фон сторінки -
+       додає легке сяйво, щоб силует читався на темному тлі */
+    filter: drop-shadow(0 0 6px rgba(180, 255, 190, 0.35));
+}
+
+.spirit-icon--left {
+    left: 4%;
+}
+
+.spirit-icon--right {
+    right: 4%;
+}
+
+/* Кожен дух гойдається/плаває по-своєму (різна тривалість і фаза),
+   щоб рух не виглядав механічно однаковим */
+.spirit-icon--1 { top: 18%; animation: spirit-float-a 7s ease-in-out infinite; }
+.spirit-icon--2 { top: 42%; animation: spirit-float-b 9s ease-in-out infinite; }
+.spirit-icon--3 { top: 66%; animation: spirit-float-a 8s ease-in-out infinite; animation-delay: -3s; }
+.spirit-icon--4 { top: 85%; animation: spirit-float-b 10s ease-in-out infinite; animation-delay: -4s; }
+
+@keyframes spirit-float-a {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    50%  { transform: translate(12px, -20px) rotate(4deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes spirit-float-b {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    50%  { transform: translate(-10px, -16px) rotate(-3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* На вузьких екранах (мобільний) ховаємо духів, щоб не заважали контенту -
+   там просто немає бокових полів, куди їх можна було б розмістити */
+@media (max-width: 900px) {
+    .spirit-icon {
+        display: none;
+    }
+}
+
+/* Кнопка "Back" - розташована ПІД лого/шапкою, але з нижчим z-index,
+   тому верхня частина кнопки "запливає" ПІД синьо-зелену плашку шапки
+   і видно лише її нижню частину, що виглядає, ніби кнопка "виходить"
+   з-під низу плашки */
+.back-btn-under-header {
+    position: fixed;
+    top: 95px; /* трохи заходить під нижній край шапки (top:10px + висота) */
+    left: 30px;
+    z-index: 998; /* НИЖЧЕ за .wiki-header (z-index: 1000) - тому ховається за плашкою */
+
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(to bottom, #ff6a00, #e64a00);
+    padding: 6px 14px;
+    border: 3px solid #000000;
+    border-radius: 8px;
+    box-shadow: 0 3px 0px #000000;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s ease;
+}
+
+.back-btn-under-header:hover {
+    transform: translateY(2px); /* трохи виходить НИЖЧЕ з-під плашки при наведенні */
+    animation: blink-border 0.15s linear infinite;
+}
+
+.back-btn-under-header .battle-cats-font {
+    font-size: 16px;
+}
+
+/* ====================================================
+   СПИСОК РІДКОСТЕЙ на сторінці Units - тепер ВЕРТИКАЛЬНИЙ,
+   рядок під рядком: Normal, Special, Rare, Super Rare,
+   Uber, Legend, Limited
+==================================================== */
+.rarity-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
+/* Кожен rarity-item тримає кнопку + панель, що розгортається під нею */
+.rarity-item {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Та сама помаранчева кнопка-плашка, що і Units на головній, тільки
+   тепер з картинкою-медальоном рідкості замість книжки.
+   Тепер це <button>, не <a> - бо клік відкриває акордеон, а не сторінку */
 .rarity-btn {
+    width: 100%;
     background: linear-gradient(to bottom, #ff6a00, #e64a00);
+    padding: 10px 18px;
     border: 4px solid #000000;
     border-radius: 10px;
-    padding: 10px 15px;
     display: flex;
     align-items: center;
-    gap: 15px;
-    text-decoration: none;
-    box-shadow: 0 4px 0 #000000;
+    gap: 12px;
+    box-shadow: 0 3px 0px #000000;
     cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s ease;
+    font: inherit;
 }
 
 .rarity-btn:hover {
+    transform: translateY(-2px);
     animation: blink-border 0.15s linear infinite;
 }
 
-.rarity-icon {
-    width: 45px;
-    height: 45px;
-    object-fit: contain;
+/* Коли акордеон відкритий, кнопка лишається підсвіченою (активною) -
+   рамка не блимає постійно, але трохи світліша, щоб було видно який
+   розділ зараз розгорнутий */
+.rarity-btn.active {
+    border-color: #ffe600;
 }
 
-.menu-cat-card {
-    background: #243147; 
-    border: 2px solid #4a618c;
+/* Панель-акордеон, що "виповзає" з-під кнопки рідкості (slide down).
+   max-height керується через JS (для плавної CSS-анімації висоти) */
+.rarity-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background: #0e2015;
+    border: 0 solid #3f7a4f;
+    border-radius: 0 0 10px 10px;
+}
+
+.rarity-panel.open {
+    border-width: 0 3px 3px 3px;
+    margin-top: -4px; /* трохи "підклеює" панель під кнопку, без зайвої щілини */
+}
+
+.rarity-panel-placeholder {
+    padding: 18px;
+    margin: 0;
+    color: #b9d6c1;
+    font-style: italic;
+}
+
+/* Кнопка "Back" - той самий стиль помаранчевої плашки
+   з чорним контуром, що блимає фіолетово-жовтим при наведенні */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(to bottom, #ff6a00, #e64a00);
+    padding: 8px 18px;
+    border: 4px solid #000000;
+    border-radius: 10px;
+    box-shadow: 0 3px 0px #000000;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s ease;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    animation: blink-border 0.15s linear infinite;
+}
+
+.back-btn .battle-cats-font {
+    font-size: 18px;
+}
+
+.rarity-btn-text {
+    font-size: 18px; /* трохи менше за головну кнопку Units - тут їх багато на екрані */
+}
+
+/* Базова іконка-медальон рідкості - однакова картинка для всіх,
+   колір змінюється тільки через CSS filter нижче */
+.rarity-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* ----------------------------------------------------
+   ПЕРЕФАРБОВКА ОДНІЄЇ ІКОНКИ В РІЗНІ КОЛЬОРИ РІДКОСТЕЙ
+   через CSS filter: hue-rotate + saturate + brightness.
+   Оригінальна іконка золота (Super Rare), тому для неї -
+   фільтрів не треба, для решти - підбираємо градуси повороту
+   кольору по колірному колу.
+---------------------------------------------------- */
+
+/* Normal - сірий/безбарвний */
+.rarity-icon--normal {
+    filter: grayscale(1) brightness(1.3);
+}
+
+/* Special - зелений */
+.rarity-icon--special {
+    filter: hue-rotate(70deg) saturate(1.4);
+}
+
+/* Rare - синій */
+.rarity-icon--rare {
+    filter: hue-rotate(160deg) saturate(1.6) brightness(1.05);
+}
+
+/* Super Rare - оригінальний золотий колір картинки, трохи підсилений */
+.rarity-icon--super-rare {
+    filter: saturate(1.5) brightness(1.1);
+}
+
+/* Uber Rare - простий рожевий */
+.rarity-icon--uber {
+    filter: hue-rotate(290deg) saturate(2) brightness(1.05);
+}
+
+/* Legend Rare - радужно-білий (переливчастий перламутр).
+   Кіт стає білим (grayscale + brightness), а навколо нього -
+   радужний фон, що просвічується через mix-blend-mode: screen */
+.rarity-icon--legend {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(1) brightness(1.7) contrast(0.85);
+    mix-blend-mode: screen;
+}
+
+/* Обгортка-рамка з радужним градієнтом позаду legend-іконки */
+.rarity-icon-wrap--legend {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
     border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
+    background: linear-gradient(125deg,
+        #ff6b6b, #ffd93d, #6bff95, #6bd4ff, #b06bff, #ff6bd4, #ff6b6b);
+    background-size: 250% 250%;
     display: flex;
     align-items: center;
-    gap: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(255,255,255,0.4);
+    animation: legend-shimmer 3s linear infinite;
 }
 
-.menu-cat-img {
-    width: 90px;
-    height: 90px;
+@keyframes legend-shimmer {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* Limited - той самий стиль "перламутр + блики", що і Legend,
+   тільки фон позаду однотонний червоний замість радужного градієнта */
+.rarity-icon--limited {
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    background: #0d1527;
-    border: 2px solid #4a618c;
-    border-radius: 6px;
-    padding: 5px;
+    filter: grayscale(1) brightness(1.7) contrast(0.85);
+    mix-blend-mode: screen;
 }
 
-.menu-cat-info h3 a {
-    color: #ffaa00;
-    text-decoration: none;
-    font-size: 20px;
-}
-
-.menu-cat-info h3 a:hover {
-    text-decoration: underline;
-}
-
-.back-link, .back-btn {
-    color: #ff6a00;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.back-link:hover, .back-btn:hover {
-    text-decoration: underline;
+.rarity-icon-wrap--limited {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: #cc0000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(255,255,255,0.4);
 }

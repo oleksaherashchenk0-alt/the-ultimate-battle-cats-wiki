@@ -5,13 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Battle Cats Wiki | By: Huki</title>
+    <!-- Favicon (іконка вкладки браузера) -->
+    <link rel="icon" type="image/png" href="{% static 'images/wiki_logo2.png' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
+    <!-- ДУХИ, що літають по бокових порожніх полях сторінки -->
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--1">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--2">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--3">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--4">
+
+    <!-- Шапка сайту: закріплена зверху, лого Wiki зліва (дзеркально), текст одразу після,
+         кнопка мови та гіфка - праворуч -->
     <div class="wiki-header">
         <div class="header-left">
-            <img src="{% static 'images/wiki_logo.png' %}" alt="Wiki logo" class="wiki-logo">
+            <img src="{% static 'images/wiki_logo2.png' %}" alt="Wiki logo" class="wiki-logo">
             <div class="header-text">
                 <h1 data-i18n="site_title">The Battle Cats Wiki</h1>
                 <p data-i18n="site_subtitle">Welcome to the cat encyclopedia. | By: Huki</p>
