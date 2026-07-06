@@ -2,9 +2,10 @@ from django.shortcuts import render, get_object_or_404
 from .models import BattleCat
 
 # Головна сторінка з помаранчевою кнопкою UNITS
+# Коти більше не виводяться тут списком - вони показуються на сторінці
+# /units/, кожен у своїй колонці-акордеоні за рідкістю.
 def home(request):
-    cats = BattleCat.objects.all()
-    return render(request, 'wiki/index.html', {'cats': cats})
+    return render(request, 'wiki/index.html')
 
 # Головне меню з горизонтальним рядом та висувною плашкою
 def units_menu(request):

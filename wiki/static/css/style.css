@@ -188,6 +188,15 @@ body {
     margin: 0 auto;
 }
 
+/* Підказка на головній сторінці замість повного списку котів -
+   тепер коти показуються на сторінці Units, кожен у своїй колонці рідкості */
+.home-hint {
+    color: #cfd9d2;
+    font-size: 15px;
+    max-width: 480px;
+    line-height: 1.5;
+}
+
 /* ====================================================
    КНОПКА Cat Dictionary (з котиком всередині, зліва від тексту)
    Пропорції підібрані як на оригінальній Battle Cats Wiki: компактна
@@ -346,11 +355,30 @@ td {
     width: 70px;
     height: auto;
     opacity: 0.55;
-    pointer-events: none; /* не заважають клікати по контенту під ними */
     z-index: 1;
     /* Контур духу трохи світліший за темний фон сторінки -
        додає легке сяйво, щоб силует читався на темному тлі */
     filter: drop-shadow(0 0 6px rgba(180, 255, 190, 0.35));
+}
+
+/* Коли JS-фізика підключилась (spirit-drag.js), духа можна хапати і
+   тягати мишкою чи пальцем, як маленький об'єкт у невагомості.
+   Ця обʼявлена ПІЗНІШЕ в файлі, тому вона перебиває анімацію з
+   .spirit-icon--1..4 (яка лишається як запасний варіант, якщо JS не
+   спрацював - тоді духи просто тихо гойдаються, як і раніше) */
+.spirit-icon.js-particle {
+    animation: none;
+    cursor: grab;
+    touch-action: none; /* дозволяє тягнути на тачскріні, без скролу сторінки */
+    will-change: transform;
+    opacity: 0.75;
+}
+
+.spirit-icon.js-particle.is-dragging {
+    cursor: grabbing;
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(180, 255, 190, 0.6));
+    z-index: 999;
 }
 
 .spirit-icon--left {
@@ -488,6 +516,45 @@ td {
     margin: 0;
     color: #b9d6c1;
     font-style: italic;
+}
+
+/* ====================================================
+   КОТИ ВСЕРЕДИНІ ПАНЕЛІ РІДКОСТІ (акордеон на сторінці Units)
+   Компактна версія .cat-card - тут панель вужча, і котів
+   може бути багато в одній колонці
+==================================================== */
+.rarity-panel-cats {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px;
+}
+
+.cat-card--mini {
+    margin-bottom: 0;
+    padding: 12px;
+    gap: 14px;
+}
+
+.cat-card--mini .cat-img {
+    width: 70px;
+    height: 70px;
+}
+
+.cat-card--mini .cat-info h3 a {
+    font-size: 18px;
+}
+
+.cat-card--mini .stats-badge {
+    font-size: 12px;
+    padding: 4px 9px;
+    margin-right: 6px;
+}
+
+.cat-card--mini .cat-card-desc {
+    font-size: 13px;
+    color: #d1d9e6;
+    margin: 8px 0 0 0;
 }
 
 /* Кнопка "Back" - той самий стиль помаранчевої плашки
