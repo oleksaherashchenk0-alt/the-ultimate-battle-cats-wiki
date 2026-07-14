@@ -18,14 +18,18 @@
 <body>
 
     <!-- ДУХИ, що літають по бокових порожніх полях сторінки (position: fixed,
-         тому видно на будь-якому місці скролу). 4 духи: по 2 зліва і справа -->
+         тому видно на будь-якому місці скролу). 8 духів: по 4 зліва і справа -->
     <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--1">
     <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--2">
     <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--3">
     <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--4">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--5">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--6">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--7">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--8">
 
     <!-- Та сама шапка, що і на головній сторінці: лого, текст, кнопка мови, гіфка -->
-    <div class="wiki-header">
+    <div class="wiki-header" data-spirit-obstacle>
         <div class="header-left">
             <img src="{% static 'images/wiki_logo2.png' %}" alt="Wiki logo" class="wiki-logo">
             <div class="header-text">
@@ -59,7 +63,7 @@
     <div class="header-spacer"></div>
 
     <!-- ГОЛОВНИЙ КОНТЕЙНЕР з фоновим зображенням лісу -->
-    <div class="menu-page-container menu-page-container--forest">
+    <div class="menu-page-container menu-page-container--forest" data-spirit-obstacle>
 
         <h2 class="battle-cats-font" style="margin-bottom: 20px;" data-i18n="units_catalog_title">Cat Units Catalog</h2>
 
@@ -77,22 +81,19 @@
                 <div class="rarity-panel" id="panel-normal">
                     <div class="rarity-panel-cats">
                         {% for cat in cats_by_rarity.normal %}
-                        <div class="cat-card cat-card--mini">
+                        <a href="{% url 'cat_detail' cat.id %}" class="cat-card cat-card--mini cat-photo-tooltip">
                             {% if cat.image %}
                                 <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
                             {% else %}
                                 <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
                             {% endif %}
-                            <div class="cat-info">
-                                <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
-                                <p>
-                                    <span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span>
-                                    <span class="stats-badge"><strong>HP:</strong> {{ cat.hp_stat }}</span>
-                                    <span class="stats-badge"><strong>DPS:</strong> {{ cat.dps_stat }}</span>
-                                </p>
-                                <p class="cat-card-desc">{{ cat.content|slice:":120" }}...</p>
-                            </div>
-                        </div>
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
                         {% empty %}
                         <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
                         {% endfor %}
@@ -108,22 +109,19 @@
                 <div class="rarity-panel" id="panel-special">
                     <div class="rarity-panel-cats">
                         {% for cat in cats_by_rarity.special %}
-                        <div class="cat-card cat-card--mini">
+                        <a href="{% url 'cat_detail' cat.id %}" class="cat-card cat-card--mini cat-photo-tooltip">
                             {% if cat.image %}
                                 <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
                             {% else %}
                                 <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
                             {% endif %}
-                            <div class="cat-info">
-                                <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
-                                <p>
-                                    <span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span>
-                                    <span class="stats-badge"><strong>HP:</strong> {{ cat.hp_stat }}</span>
-                                    <span class="stats-badge"><strong>DPS:</strong> {{ cat.dps_stat }}</span>
-                                </p>
-                                <p class="cat-card-desc">{{ cat.content|slice:":120" }}...</p>
-                            </div>
-                        </div>
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
                         {% empty %}
                         <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
                         {% endfor %}
@@ -139,22 +137,19 @@
                 <div class="rarity-panel" id="panel-rare">
                     <div class="rarity-panel-cats">
                         {% for cat in cats_by_rarity.rare %}
-                        <div class="cat-card cat-card--mini">
+                        <a href="{% url 'cat_detail' cat.id %}" class="cat-card cat-card--mini cat-photo-tooltip">
                             {% if cat.image %}
                                 <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
                             {% else %}
                                 <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
                             {% endif %}
-                            <div class="cat-info">
-                                <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
-                                <p>
-                                    <span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span>
-                                    <span class="stats-badge"><strong>HP:</strong> {{ cat.hp_stat }}</span>
-                                    <span class="stats-badge"><strong>DPS:</strong> {{ cat.dps_stat }}</span>
-                                </p>
-                                <p class="cat-card-desc">{{ cat.content|slice:":120" }}...</p>
-                            </div>
-                        </div>
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
                         {% empty %}
                         <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
                         {% endfor %}
@@ -170,22 +165,19 @@
                 <div class="rarity-panel" id="panel-super-rare">
                     <div class="rarity-panel-cats">
                         {% for cat in cats_by_rarity.super_rare %}
-                        <div class="cat-card cat-card--mini">
+                        <a href="{% url 'cat_detail' cat.id %}" class="cat-card cat-card--mini cat-photo-tooltip">
                             {% if cat.image %}
                                 <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
                             {% else %}
                                 <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
                             {% endif %}
-                            <div class="cat-info">
-                                <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
-                                <p>
-                                    <span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span>
-                                    <span class="stats-badge"><strong>HP:</strong> {{ cat.hp_stat }}</span>
-                                    <span class="stats-badge"><strong>DPS:</strong> {{ cat.dps_stat }}</span>
-                                </p>
-                                <p class="cat-card-desc">{{ cat.content|slice:":120" }}...</p>
-                            </div>
-                        </div>
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
                         {% empty %}
                         <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
                         {% endfor %}
@@ -201,22 +193,19 @@
                 <div class="rarity-panel" id="panel-uber">
                     <div class="rarity-panel-cats">
                         {% for cat in cats_by_rarity.uber_rare %}
-                        <div class="cat-card cat-card--mini">
+                        <a href="{% url 'cat_detail' cat.id %}" class="cat-card cat-card--mini cat-photo-tooltip">
                             {% if cat.image %}
                                 <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
                             {% else %}
                                 <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
                             {% endif %}
-                            <div class="cat-info">
-                                <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
-                                <p>
-                                    <span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span>
-                                    <span class="stats-badge"><strong>HP:</strong> {{ cat.hp_stat }}</span>
-                                    <span class="stats-badge"><strong>DPS:</strong> {{ cat.dps_stat }}</span>
-                                </p>
-                                <p class="cat-card-desc">{{ cat.content|slice:":120" }}...</p>
-                            </div>
-                        </div>
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
                         {% empty %}
                         <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
                         {% endfor %}
@@ -234,22 +223,19 @@
                 <div class="rarity-panel" id="panel-legend">
                     <div class="rarity-panel-cats">
                         {% for cat in cats_by_rarity.legend_rare %}
-                        <div class="cat-card cat-card--mini">
+                        <a href="{% url 'cat_detail' cat.id %}" class="cat-card cat-card--mini cat-photo-tooltip">
                             {% if cat.image %}
                                 <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
                             {% else %}
                                 <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
                             {% endif %}
-                            <div class="cat-info">
-                                <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
-                                <p>
-                                    <span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span>
-                                    <span class="stats-badge"><strong>HP:</strong> {{ cat.hp_stat }}</span>
-                                    <span class="stats-badge"><strong>DPS:</strong> {{ cat.dps_stat }}</span>
-                                </p>
-                                <p class="cat-card-desc">{{ cat.content|slice:":120" }}...</p>
-                            </div>
-                        </div>
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
                         {% empty %}
                         <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
                         {% endfor %}
@@ -267,22 +253,19 @@
                 <div class="rarity-panel" id="panel-limited">
                     <div class="rarity-panel-cats">
                         {% for cat in cats_by_rarity.limited %}
-                        <div class="cat-card cat-card--mini">
+                        <a href="{% url 'cat_detail' cat.id %}" class="cat-card cat-card--mini cat-photo-tooltip">
                             {% if cat.image %}
                                 <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
                             {% else %}
                                 <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
                             {% endif %}
-                            <div class="cat-info">
-                                <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
-                                <p>
-                                    <span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span>
-                                    <span class="stats-badge"><strong>HP:</strong> {{ cat.hp_stat }}</span>
-                                    <span class="stats-badge"><strong>DPS:</strong> {{ cat.dps_stat }}</span>
-                                </p>
-                                <p class="cat-card-desc">{{ cat.content|slice:":120" }}...</p>
-                            </div>
-                        </div>
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
                         {% empty %}
                         <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
                         {% endfor %}
@@ -310,6 +293,7 @@
                 if (p !== panel) {
                     p.classList.remove('open');
                     p.style.maxHeight = null;
+                    p.style.overflow = 'hidden'; // ховаємо назад, щоб анімація закриття теж працювала
                 }
             });
             document.querySelectorAll('.rarity-btn.active').forEach(function (b) {
@@ -317,6 +301,7 @@
             });
 
             if (isOpen) {
+                panel.style.overflow = 'hidden'; // повертаємо overflow ПЕРЕД згортанням, інакше висота "стрибне"
                 panel.classList.remove('open');
                 panel.style.maxHeight = null;
                 btnEl.classList.remove('active');
@@ -324,6 +309,16 @@
                 panel.classList.add('open');
                 panel.style.maxHeight = panel.scrollHeight + 'px';
                 btnEl.classList.add('active');
+
+                // Коли анімація розгортання завершилась - знімаємо overflow: hidden,
+                // інакше спливаючі підказки (tooltip) над фото котів обрізаються
+                // краєм панелі і їх ледь видно
+                panel.addEventListener('transitionend', function onOpen(e) {
+                    if (e.propertyName === 'max-height') {
+                        panel.style.overflow = 'visible';
+                        panel.removeEventListener('transitionend', onOpen);
+                    }
+                });
             }
         }
     </script>

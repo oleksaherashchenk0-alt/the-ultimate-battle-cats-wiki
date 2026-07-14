@@ -4,56 +4,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Units Menu | Battle Cats Wiki</title>
+    <title>{{ cat.title }} | Battle Cats Wiki</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon/favicon-16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'images/favicon/favicon-48x48.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/favicon/android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'images/favicon/android-chrome-512x512.png' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-    <!-- Наша фірмова шапка сайту -->
-    <div class="wiki-header">
+    <!-- Духи по боках сторінки (той самий ефект, що і на інших сторінках) -->
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--1">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--2">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--3">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--4">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--5">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--6">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--7">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--8">
+
+    <!-- Шапка сайту -->
+    <div class="wiki-header" data-spirit-obstacle>
         <div class="header-left">
-            <img src="{% static 'images/wiki_logo.png' %}" alt="Wiki logo" class="wiki-logo">
+            <img src="{% static 'images/wiki_logo2.png' %}" alt="Wiki logo" class="wiki-logo">
             <div class="header-text">
-                <h1>The Battle Cats Wiki</h1>
-                <p>Welcome to the cat encyclopedia. | By: Huki</p>
+                <h1 data-i18n="site_title">The Battle Cats Wiki</h1>
+                <p data-i18n="site_subtitle">Welcome to the cat encyclopedia. | By: Huki</p>
             </div>
         </div>
+
+        <!-- Права частина шапки: кнопка мови + гіфка поруч (та сама, що і на інших сторінках) -->
+        <div class="header-right">
+            <div class="lang-switch">
+                <button class="lang-btn" type="button" id="langBtn" onclick="document.getElementById('langDropdown').classList.toggle('open')">EN ▾</button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" onclick="setLanguage('en'); return false;">English</a>
+                    <a href="#" onclick="setLanguage('de'); return false;">Deutsch</a>
+                    <a href="#" onclick="setLanguage('es'); return false;">Español</a>
+                    <a href="#" onclick="setLanguage('ja'); return false;">日本語</a>
+                </div>
+            </div>
+
+            <img src="{% static 'images/falling.gif' %}" alt="cat gif" class="header-gif">
+        </div>
     </div>
+
+    <a href="{% url 'units_menu' %}" class="back-btn-under-header">
+        <span class="battle-cats-font" data-i18n="back_short">&larr; Back</span>
+    </a>
 
     <div class="header-spacer"></div>
 
-    <!-- ГОЛОВНИЙ КОНТЕЙНЕР (Створює великий порожній простір по боках, як на фото 3) -->
-    <div class="menu-page-container">
-        
-        <div style="margin-bottom: 20px;">
-            <a href="{% url 'home' %}" class="back-link">&larr; Back to Main Page</a>
-        </div>
+    <!-- ГОЛОВНИЙ КОНТЕЙНЕР сторінки окремого кота -->
+    <div class="menu-page-container menu-page-container--forest" data-spirit-obstacle>
 
-        <h2 class="battle-cats-font" style="margin-bottom: 25px;">Cat Units Catalog</h2>
+        <div class="cat-detail-columns">
 
-        <!-- Список котів у світліших металевих картках (як на фото 2) -->
-        <div class="menu-cats-list">
-            {% for cat in cats %}
-            <div class="menu-cat-card">
-                {% if cat.image %}
-                    <img src="{{ cat.image.url }}" class="menu-cat-img" alt="{{ cat.title }}">
-                {% else %}
-                    <img src="https://miraheze.org" class="menu-cat-img" alt="No image">
-                {% endif %}
+            <div class="cat-detail-left">
+                <div class="cat-detail-top">
+                    {% if cat.image %}
+                        <img src="{{ cat.image.url }}" class="cat-detail-img" alt="{{ cat.title }}">
+                    {% else %}
+                        <img src="{% static 'images/cat_icon.png' %}" class="cat-detail-img" alt="No image">
+                    {% endif %}
 
-                <div class="menu-cat-info">
-                    <!-- Посилання на детальну сторінку кота -->
-                    <h3><a href="{% url 'cat_detail' cat.id %}">{{ cat.title }}</a></h3>
-                    <p><span class="stats-badge"><strong>Rarity:</strong> {{ cat.get_status_display }}</span></p>
-                    <p style="color: #d1d9e6; font-size: 14px; margin: 5px 0 0 0;">{{ cat.content|slice:":100" }}...</p>
+                    <div class="cat-detail-heading">
+                        <h2 class="battle-cats-font i18n-dynamic"
+                            data-en="{{ cat.title }}"
+                            data-de="{{ cat.title_de|default:cat.title }}"
+                            data-es="{{ cat.title_es|default:cat.title }}"
+                            data-ja="{{ cat.title_ja|default:cat.title }}">{{ cat.title }}</h2>
+                        <p><span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span></p>
+                    </div>
+                </div>
+
+                <p class="cat-detail-desc i18n-dynamic"
+                   data-en="{{ cat.content }}"
+                   data-de="{{ cat.content_de|default:cat.content }}"
+                   data-es="{{ cat.content_es|default:cat.content }}"
+                   data-ja="{{ cat.content_ja|default:cat.content }}">{{ cat.content }}</p>
+
+                <!-- ==================================================
+                     ТРЕЙТИ - справжні іконки (вирізані з гри), сірі й
+                     напівпрозорі за замовчуванням, кольорові (клас "active"),
+                     якщо кіт ефективний проти цього типу
+                ================================================== -->
+                <h3 class="battle-cats-font stats-section-title" data-i18n="traits_title">Traits</h3>
+                <div class="trait-icon-row">
+                    <img src="{% static 'images/traits/red.png' %}" alt="Red" title="Red"
+                         class="trait-icon{% if cat.hits_red %} active{% endif %}">
+                    <img src="{% static 'images/traits/floating.png' %}" alt="Floating" title="Floating"
+                         class="trait-icon{% if cat.hits_floating %} active{% endif %}">
+                    <img src="{% static 'images/traits/black.png' %}" alt="Black" title="Black"
+                         class="trait-icon{% if cat.hits_black %} active{% endif %}">
+                    <img src="{% static 'images/traits/metal.png' %}" alt="Metal" title="Metal"
+                         class="trait-icon{% if cat.hits_metal %} active{% endif %}">
+                    <img src="{% static 'images/traits/angel.png' %}" alt="Angel" title="Angel"
+                         class="trait-icon{% if cat.hits_angel %} active{% endif %}">
+                    <img src="{% static 'images/traits/alien.png' %}" alt="Alien" title="Alien"
+                         class="trait-icon{% if cat.hits_alien %} active{% endif %}">
+                    <img src="{% static 'images/traits/zombie.png' %}" alt="Zombie" title="Zombie"
+                         class="trait-icon{% if cat.hits_zombie %} active{% endif %}">
+                    <img src="{% static 'images/traits/relic.png' %}" alt="Relic" title="Relic"
+                         class="trait-icon{% if cat.hits_relic %} active{% endif %}">
+                    <img src="{% static 'images/traits/aku.png' %}" alt="Aku" title="Aku"
+                         class="trait-icon{% if cat.hits_aku %} active{% endif %}">
                 </div>
             </div>
-            {% empty %}
-                <p>No cats found. Go to admin panel to add units!</p>
-            {% endfor %}
+
+            <!-- ==================================================
+                 СІТКА КАРТОК ЗІ СТАТАМИ -
+                 усі підписи через data-i18n - перекладаються разом з усім
+                 сайтом при виборі мови; самі цифри статів - без перекладу
+            ================================================== -->
+            <div class="cat-detail-right">
+                <h3 class="battle-cats-font stats-section-title" data-i18n="stats_section_main">Stats</h3>
+                <div class="cat-stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_hp">Health</div>
+                <div class="stat-card-value">{{ cat.hp_stat }} <span class="stat-card-unit">HP</span></div>
+                <div class="stat-card-sub">{{ cat.knockback_count }} <span data-i18n="unit_knockbacks_short">Knockbacks</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_attack_power">Attack Power</div>
+                <div class="stat-card-value stat-card-value--accent">{{ cat.attack_power }} <span data-i18n="unit_damage">Damage</span></div>
+                <div class="stat-card-sub">({{ cat.dps_stat }} <span data-i18n="unit_dps_short">DPS</span>)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_range">Range</div>
+                <div class="stat-card-value">{{ cat.attack_range }}</div>
+                <div class="stat-card-sub" data-i18n="unit_melee_single">Melee, single target</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_speed">Speed</div>
+                <div class="stat-card-value">{{ cat.move_speed }}</div>
+                <div class="stat-card-sub" data-i18n="unit_speed_note">Movement speed</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_attack_frequency">Attack Frequency</div>
+                <div class="stat-card-value">{{ cat.attack_frequency_seconds }}<span data-i18n="unit_seconds_short">s</span></div>
+                <div class="stat-card-sub"><span data-i18n="stat_foreswing">Foreswing</span> {{ cat.foreswing_seconds }}<span data-i18n="unit_seconds_short">s</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_recharge">Recharge</div>
+                <div class="stat-card-value">{{ cat.recharge_min_seconds }}–{{ cat.recharge_max_seconds }}<span data-i18n="unit_seconds_short">s</span></div>
+                <div class="stat-card-sub" data-i18n="unit_recharge_note">Depends on Cat Cannon / base level upgrades</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_cost_default">Default Price</div>
+                <div class="stat-card-value">{{ cat.cost_chapter1 }}¢</div>
+                <div class="stat-card-sub">
+                    <span data-i18n="unit_chapter">Ch.</span>1: {{ cat.cost_chapter1 }}¢ ·
+                    <span data-i18n="unit_chapter">Ch.</span>2: {{ cat.cost_chapter2 }}¢ ·
+                    <span data-i18n="unit_chapter">Ch.</span>3: {{ cat.cost_chapter3 }}¢
+                </div>
+            </div>
+
+                </div>
+            </div>
+
         </div>
 
     </div>
+
+    <script src="{% static 'js/translations.js' %}"></script>
+    <script src="{% static 'js/spirit-drag.js' %}"></script>
 
 </body>
 </html>

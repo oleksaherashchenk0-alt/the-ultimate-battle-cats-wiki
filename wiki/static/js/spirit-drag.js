@@ -21,11 +21,67 @@
         if (!spirits.length) return;
 
         var FRICTION = 0.985;        // гальмування за кадр, коли дух летить за інерцією
-        var IDLE_JITTER = 0.05;      // сила випадкових поштовхів під час вільного дрейфу
         var IDLE_MAX_SPEED = 0.5;    // максимальна швидкість вільного дрейфу (px/кадр)
         var INERTIA_MAX_SPEED = 22;  // максимальна швидкість одразу після відпускання (px/кадр)
+        var DRIFT_SMOOTH = 0.02;     // наскільки плавно швидкість "доганяє" ціль дрейфу (менше = плавніше, без тремтіння)
 
         var recalcFns = []; // функції перерахунку якоря кожного духа - викликаються при resize
+
+        // Елементи-"перешкоди" - плашки/панелі, від яких духи мають відбиватися,
+        // а не пролітати крізь них. Позначаються атрибутом data-spirit-obstacle
+        // прямо в HTML-шаблонах (шапка сайту, центральна панель зі списком тощо).
+        var obstacleEls = document.querySelectorAll('[data-spirit-obstacle]');
+
+        function getObstacleRects() {
+            var rects = [];
+            obstacleEls.forEach(function (el) {
+                var r = el.getBoundingClientRect();
+                // Пропускаємо елементи, які зараз приховані (display: none),
+                // напр. шапку чи панель на дуже вузьких екранах
+                if (r.width > 0 && r.height > 0) rects.push(r);
+            });
+            return rects;
+        }
+
+        // AABB-колізія духа з прямокутником перешкоди: якщо перекриваються -
+        // виштовхуємо духа назовні по осі найменшого проникнення і "відбиваємо"
+        // відповідну складову швидкості (як від стінки)
+        function resolveObstacle(state, anchor, rect) {
+            var sLeft = anchor.left + state.x;
+            var sTop = anchor.top + state.y;
+            var sRight = sLeft + anchor.width;
+            var sBottom = sTop + anchor.height;
+
+            if (sRight <= rect.left || sLeft >= rect.right || sBottom <= rect.top || sTop >= rect.bottom) {
+                return; // не перекриваються - нічого робити не треба
+            }
+
+            var overlapLeft = sRight - rect.left;
+            var overlapRight = rect.right - sLeft;
+            var overlapTop = sBottom - rect.top;
+            var overlapBottom = rect.bottom - sTop;
+
+            var minOverlapX = Math.min(overlapLeft, overlapRight);
+            var minOverlapY = Math.min(overlapTop, overlapBottom);
+
+            if (minOverlapX < minOverlapY) {
+                if (overlapLeft < overlapRight) {
+                    state.x -= overlapLeft;
+                    state.vx = -Math.abs(state.vx || 0.1);
+                } else {
+                    state.x += overlapRight;
+                    state.vx = Math.abs(state.vx || 0.1);
+                }
+            } else {
+                if (overlapTop < overlapBottom) {
+                    state.y -= overlapTop;
+                    state.vy = -Math.abs(state.vy || 0.1);
+                } else {
+                    state.y += overlapBottom;
+                    state.vy = Math.abs(state.vy || 0.1);
+                }
+            }
+        }
 
         spirits.forEach(function (el, index) {
             el.classList.add('js-particle');
@@ -124,32 +180,50 @@
             el.addEventListener('pointerup', onPointerUp);
             el.addEventListener('pointercancel', onPointerUp);
 
-            // Невеличкий випадковий фазовий зсув, щоб духи не рухались синхронно
+            // Унікальний фазовий зсув і частоти для кожного духа, щоб вони не рухались
+            // синхронно і щоб траєкторія виглядала органічно, а не по колу
             var seed = index * 12.9898;
+            var freqX1 = 0.00013 + (index % 5) * 0.00003;
+            var freqX2 = 0.00021 + (index % 7) * 0.00002;
+            var freqY1 = 0.00017 + (index % 4) * 0.00004;
+            var freqY2 = 0.00026 + (index % 6) * 0.00002;
 
             function tick() {
                 if (!state.dragging) {
-                    // Легкий випадковий поштовх - імітація дрейфу в невагомості
-                    state.vx += (Math.random() - 0.5) * IDLE_JITTER;
-                    state.vy += (Math.random() - 0.5) * IDLE_JITTER;
+                    var t = performance.now();
 
-                    // Тертя - гасить швидкість, набуту від перетягування, до спокійного дрейфу
+                    // ПЛАВНИЙ дрейф: замість випадкових поштовхів щокадру (що і давало
+                    // "тремтіння"), ціль швидкості обчислюється як сума кількох плавних
+                    // синусоїд з різними періодами і фазою для кожного духа. Це дає
+                    // безкінечно плавну, неповторювану "живу" траєкторію без різких змін.
+                    var targetVx = (Math.sin(seed + t * freqX1) + Math.sin(seed * 1.7 + t * freqX2)) * (IDLE_MAX_SPEED * 0.5);
+                    var targetVy = (Math.cos(seed * 1.3 + t * freqY1) + Math.sin(seed * 2.1 + t * freqY2)) * (IDLE_MAX_SPEED * 0.5);
+
+                    // Тертя - гасить швидкість, набуту від перетягування (інерцію)
                     state.vx *= FRICTION;
                     state.vy *= FRICTION;
+
+                    // Плавно "доганяємо" ціль дрейфу (лінійна інтерполяція),
+                    // а не стрибаємо до неї - це і прибирає тремтіння
+                    state.vx += (targetVx - state.vx) * DRIFT_SMOOTH;
+                    state.vy += (targetVy - state.vy) * DRIFT_SMOOTH;
 
                     var speed = Math.sqrt(state.vx * state.vx + state.vy * state.vy);
                     if (speed > IDLE_MAX_SPEED) {
                         var scale = IDLE_MAX_SPEED / speed;
                         state.vx *= scale;
                         state.vy *= scale;
-                    } else if (speed < 0.05) {
-                        // Ніколи не завмирає повністю - завжди тихо "плаває"
-                        state.vx += Math.cos(seed + performance.now() * 0.0002) * 0.01;
-                        state.vy += Math.sin(seed + performance.now() * 0.00025) * 0.01;
                     }
 
                     state.x += state.vx;
                     state.y += state.vy;
+
+                    // Відбій від плашок/панелей (шапка, центральний контейнер тощо),
+                    // а тільки потім - від країв екрану
+                    var obstacles = getObstacleRects();
+                    for (var i = 0; i < obstacles.length; i++) {
+                        resolveObstacle(state, anchor, obstacles[i]);
+                    }
 
                     clampToViewport();
                     applyTransform();

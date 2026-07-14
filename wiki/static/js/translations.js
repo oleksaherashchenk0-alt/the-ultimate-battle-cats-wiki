@@ -124,6 +124,176 @@ const DICTIONARY = {
         de: "Katzen dieser Seltenheit erscheinen hier bald!",
         es: "¡Los gatos de esta rareza aparecerán aquí pronto!",
         ja: "このレア度の猫は近日公開予定です！"
+    },
+
+    /* ===== Таблиця статів на сторінці окремого кота (cat_detail.html) ===== */
+    stats_section_main: {
+        en: "Stats",
+        de: "Statuswerte",
+        es: "Estadísticas",
+        ja: "ステータス"
+    },
+    traits_title: {
+        en: "Traits",
+        de: "Merkmale",
+        es: "Rasgos",
+        ja: "特性"
+    },
+    stats_section_speed: {
+        en: "Attack Speed & Recharge",
+        de: "Angriffstempo & Wiederaufladung",
+        es: "Velocidad de ataque y recarga",
+        ja: "攻撃速度と再出撃時間"
+    },
+    stats_section_economy: {
+        en: "Battle Economy",
+        de: "Kampfwirtschaft",
+        es: "Economía de batalla",
+        ja: "バトルコスト"
+    },
+    stat_hp: {
+        en: "Health",
+        de: "Gesundheit",
+        es: "Salud",
+        ja: "体力"
+    },
+    stat_attack_power: {
+        en: "Attack Power",
+        de: "Angriffskraft",
+        es: "Poder de ataque",
+        ja: "攻撃力"
+    },
+    stat_dps: {
+        en: "Damage Per Second (DPS)",
+        de: "Schaden pro Sekunde (DPS)",
+        es: "Daño por segundo (DPS)",
+        ja: "秒間ダメージ（DPS）"
+    },
+    stat_knockbacks: {
+        en: "Knockbacks",
+        de: "Rückstöße",
+        es: "Retrocesos",
+        ja: "ノックバック回数"
+    },
+    stat_range: {
+        en: "Range",
+        de: "Reichweite",
+        es: "Alcance",
+        ja: "射程距離"
+    },
+    stat_speed: {
+        en: "Movement Speed",
+        de: "Bewegungsgeschwindigkeit",
+        es: "Velocidad de movimiento",
+        ja: "移動速度"
+    },
+    stat_attack_frequency: {
+        en: "Attack Frequency",
+        de: "Angriffsfrequenz",
+        es: "Frecuencia de ataque",
+        ja: "攻撃頻度"
+    },
+    stat_foreswing: {
+        en: "Foreswing",
+        de: "Vorschwung",
+        es: "Preataque (Foreswing)",
+        ja: "予備動作"
+    },
+    stat_recharge: {
+        en: "Recharge Time",
+        de: "Wiederaufladezeit",
+        es: "Tiempo de recarga",
+        ja: "再出撃時間"
+    },
+    stat_cost: {
+        en: "Summon Cost",
+        de: "Beschwörungskosten",
+        es: "Costo de invocación",
+        ja: "出撃コスト"
+    },
+    stat_cost_default: {
+        en: "Default Price",
+        de: "Standardpreis",
+        es: "Precio predeterminado",
+        ja: "初期コスト"
+    },
+    unit_times: {
+        en: "times",
+        de: "Mal",
+        es: "veces",
+        ja: "回"
+    },
+    unit_melee_single: {
+        en: "Melee, single target",
+        de: "Nahkampf, Einzelziel",
+        es: "Cuerpo a cuerpo, objetivo único",
+        ja: "近距離・単体攻撃"
+    },
+    unit_every: {
+        en: "every",
+        de: "alle",
+        es: "cada",
+        ja: "毎"
+    },
+    unit_seconds: {
+        en: "sec.",
+        de: "Sek.",
+        es: "seg.",
+        ja: "秒"
+    },
+    unit_from: {
+        en: "from",
+        de: "von",
+        es: "desde",
+        ja: "最短"
+    },
+    unit_to: {
+        en: "to",
+        de: "bis",
+        es: "hasta",
+        ja: "〜最長"
+    },
+    unit_recharge_note: {
+        en: "Depends on Cat Cannon / base level upgrades",
+        de: "Abhängig von Katzenkanone / Basis-Upgrades",
+        es: "Depende del Cañón Gatuno / mejoras de base",
+        ja: "キャノン砲・本部レベルの強化状況による"
+    },
+    unit_chapter: {
+        en: "Chapter",
+        de: "Kapitel",
+        es: "Capítulo",
+        ja: "章"
+    },
+    unit_knockbacks_short: {
+        en: "Knockbacks",
+        de: "Rückstöße",
+        es: "Retrocesos",
+        ja: "ノックバック"
+    },
+    unit_damage: {
+        en: "Damage",
+        de: "Schaden",
+        es: "Daño",
+        ja: "ダメージ"
+    },
+    unit_speed_note: {
+        en: "Movement speed",
+        de: "Bewegungsgeschwindigkeit",
+        es: "Velocidad de movimiento",
+        ja: "移動速度"
+    },
+    unit_dps_short: {
+        en: "DPS",
+        de: "DPS",
+        es: "DPS",
+        ja: "DPS"
+    },
+    unit_seconds_short: {
+        en: "s",
+        de: "s",
+        es: "s",
+        ja: "秒"
     }
 };
 
@@ -137,6 +307,18 @@ function setLanguage(langCode) {
         var key = el.getAttribute('data-i18n');
         if (DICTIONARY[key] && DICTIONARY[key][langCode]) {
             el.textContent = DICTIONARY[key][langCode];
+        }
+    });
+
+    // Динамічний переклад - для тексту з БАЗИ ДАНИХ (ім'я й опис конкретного
+    // кота), а не зі словника DICTIONARY. Кожен такий елемент сам носить свої
+    // переклади в data-de/data-es/data-ja/data-en (їх виводить Django-шаблон
+    // з полів title_de, content_de і т.д.). Якщо перекладу для мови нема -
+    // просто лишаємо англійську версію (data-en), яку завжди підставляє сервер.
+    document.querySelectorAll('.i18n-dynamic').forEach(function (el) {
+        var translated = el.getAttribute('data-' + langCode);
+        if (translated) {
+            el.textContent = translated;
         }
     });
 

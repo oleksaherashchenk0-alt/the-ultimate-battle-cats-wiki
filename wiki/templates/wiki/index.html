@@ -17,15 +17,19 @@
 </head>
 <body>
 
-    <!-- ДУХИ, що літають по бокових порожніх полях сторінки -->
+    <!-- ДУХИ, що літають по бокових порожніх полях сторінки (8 штук: по 4 зліва і справа) -->
     <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--1">
     <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--2">
     <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--3">
     <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--4">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--5">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--6">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--7">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--8">
 
     <!-- Шапка сайту: закріплена зверху, лого Wiki зліва (дзеркально), текст одразу після,
          кнопка мови та гіфка - праворуч -->
-    <div class="wiki-header">
+    <div class="wiki-header" data-spirit-obstacle>
         <div class="header-left">
             <img src="{% static 'images/wiki_logo2.png' %}" alt="Wiki logo" class="wiki-logo">
             <div class="header-text">
@@ -51,7 +55,7 @@
 
     <div class="header-spacer"></div>
 
-    <div class="cat-container">
+    <div class="cat-container" data-spirit-obstacle>
 
         <a href="{% url 'units_menu' %}" class="battle-cats-btn btn-shifted-left">
             <img src="{% static 'images/cat_icon.png' %}" alt="cat icon" class="btn-cat-icon">
