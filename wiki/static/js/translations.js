@@ -139,6 +139,12 @@ const DICTIONARY = {
         es: "Rasgos",
         ja: "特性"
     },
+    abilities_title: {
+        en: "Abilities",
+        de: "Fähigkeiten",
+        es: "Habilidades",
+        ja: "特殊能力"
+    },
     stats_section_speed: {
         en: "Attack Speed & Recharge",
         de: "Angriffstempo & Wiederaufladung",

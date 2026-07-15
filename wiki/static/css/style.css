@@ -357,7 +357,7 @@ td {
     position: fixed;
     width: 70px;
     height: auto;
-    opacity: 0.55;
+    opacity: 0.28;
     z-index: 1;
     /* Контур духу трохи світліший за темний фон сторінки -
        додає легке сяйво, щоб силует читався на темному тлі */
@@ -374,12 +374,12 @@ td {
     cursor: grab;
     touch-action: none; /* дозволяє тягнути на тачскріні, без скролу сторінки */
     will-change: transform;
-    opacity: 0.75;
+    opacity: 0.4;
 }
 
 .spirit-icon.js-particle.is-dragging {
     cursor: grabbing;
-    opacity: 1;
+    opacity: 0.7;
     filter: drop-shadow(0 0 10px rgba(180, 255, 190, 0.6));
     z-index: 999;
 }
@@ -916,11 +916,13 @@ td {
 }
 
 /* ====================================================
-   ТРЕЙТИ на сторінці кота - справжні іконки з гри, сірі й
-   напівпрозорі за замовчуванням, кольорові (.active), якщо кіт
-   ефективний проти цього типу
+   ТРЕЙТИ на сторінці кота - кольорові текстові бейджі
+   (як в оригінальній Battle Cats wiki). Кожен трейт має
+   свій фірмовий колір фону. Неактивні бейджі - той самий
+   колір, лише притлумлений, не суцільно сірий. Активні -
+   на повну яскравість, трохи "виростають" (scale).
 ==================================================== */
-.trait-icon-row {
+.trait-badge-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -928,19 +930,67 @@ td {
     margin-top: 12px;
 }
 
-.trait-icon {
-    height: 30px;
-    width: auto;
+.trait-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.4;
+    opacity: 0.55;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.trait-badge.active {
+    opacity: 1;
+    transform: scale(1.06);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.25);
+}
+
+.trait-badge--red      { background: #e6480f; }
+.trait-badge--floating { background: #3f7a4f; }
+.trait-badge--black     { background: #2b2b2b; }
+.trait-badge--metal    { background: #5c5c5c; }
+.trait-badge--angel    { background: #8a7a1e; }
+.trait-badge--alien    { background: #157a68; }
+.trait-badge--zombie   { background: #6b2b82; }
+.trait-badge--relic    { background: #565f1e; }
+.trait-badge--aku      { background: #234e75; }
+.trait-badge--none     { background: #555a5f; }
+
+/* ====================================================
+   ЗДІБНОСТІ на сторінці кота - іконка + назва (кольором)
+   + опис в одному рядку, одразу під трейтами
+==================================================== */
+.ability-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.ability-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.ability-icon {
+    height: 26px;
+    width: 26px;
     object-fit: contain;
-    filter: grayscale(1) opacity(0.4);
-    transition: filter 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 1px;
 }
 
-.trait-icon.active {
-    filter: none;
-    transform: scale(1.1);
+.ability-text {
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: #d7ded9;
 }
 
-.trait-icon:hover {
-    transform: scale(1.18);
+.ability-name {
+    color: #4fb8e0;
+    font-weight: 700;
 }

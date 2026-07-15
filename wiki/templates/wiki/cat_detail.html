@@ -87,31 +87,45 @@
                    data-ja="{{ cat.content_ja|default:cat.content }}">{{ cat.content }}</p>
 
                 <!-- ==================================================
-                     ТРЕЙТИ - справжні іконки (вирізані з гри), сірі й
-                     напівпрозорі за замовчуванням, кольорові (клас "active"),
-                     якщо кіт ефективний проти цього типу
+                     ТРЕЙТИ - кольорові текстові бейджі (як в оригінальній
+                     Battle Cats wiki), кожен трейт має свій колір фону.
+                     Неактивні - той самий колір, але притлумлений (не
+                     повністю сірий), активні - яскраві на весь колір.
+                     "None" підсвічується, якщо в кота взагалі немає трейтів.
                 ================================================== -->
                 <h3 class="battle-cats-font stats-section-title" data-i18n="traits_title">Traits</h3>
-                <div class="trait-icon-row">
-                    <img src="{% static 'images/traits/red.png' %}" alt="Red" title="Red"
-                         class="trait-icon{% if cat.hits_red %} active{% endif %}">
-                    <img src="{% static 'images/traits/floating.png' %}" alt="Floating" title="Floating"
-                         class="trait-icon{% if cat.hits_floating %} active{% endif %}">
-                    <img src="{% static 'images/traits/black.png' %}" alt="Black" title="Black"
-                         class="trait-icon{% if cat.hits_black %} active{% endif %}">
-                    <img src="{% static 'images/traits/metal.png' %}" alt="Metal" title="Metal"
-                         class="trait-icon{% if cat.hits_metal %} active{% endif %}">
-                    <img src="{% static 'images/traits/angel.png' %}" alt="Angel" title="Angel"
-                         class="trait-icon{% if cat.hits_angel %} active{% endif %}">
-                    <img src="{% static 'images/traits/alien.png' %}" alt="Alien" title="Alien"
-                         class="trait-icon{% if cat.hits_alien %} active{% endif %}">
-                    <img src="{% static 'images/traits/zombie.png' %}" alt="Zombie" title="Zombie"
-                         class="trait-icon{% if cat.hits_zombie %} active{% endif %}">
-                    <img src="{% static 'images/traits/relic.png' %}" alt="Relic" title="Relic"
-                         class="trait-icon{% if cat.hits_relic %} active{% endif %}">
-                    <img src="{% static 'images/traits/aku.png' %}" alt="Aku" title="Aku"
-                         class="trait-icon{% if cat.hits_aku %} active{% endif %}">
+                <div class="trait-badge-row">
+                    <span class="trait-badge trait-badge--red{% if cat.hits_red %} active{% endif %}">Red</span>
+                    <span class="trait-badge trait-badge--floating{% if cat.hits_floating %} active{% endif %}">Fit</span>
+                    <span class="trait-badge trait-badge--black{% if cat.hits_black %} active{% endif %}">Drk</span>
+                    <span class="trait-badge trait-badge--metal{% if cat.hits_metal %} active{% endif %}">Mtl</span>
+                    <span class="trait-badge trait-badge--angel{% if cat.hits_angel %} active{% endif %}">Ang</span>
+                    <span class="trait-badge trait-badge--alien{% if cat.hits_alien %} active{% endif %}">Aln</span>
+                    <span class="trait-badge trait-badge--zombie{% if cat.hits_zombie %} active{% endif %}">Z</span>
+                    <span class="trait-badge trait-badge--relic{% if cat.hits_relic %} active{% endif %}">Re</span>
+                    <span class="trait-badge trait-badge--aku{% if cat.hits_aku %} active{% endif %}">Aku</span>
+                    <span class="trait-badge trait-badge--none{% if not cat.hits_red and not cat.hits_floating and not cat.hits_black and not cat.hits_metal and not cat.hits_angel and not cat.hits_alien and not cat.hits_zombie and not cat.hits_relic and not cat.hits_aku %} active{% endif %}">None</span>
                 </div>
+
+                <!-- ==================================================
+                     ЗДІБНОСТІ - беруться з каталогу Ability (M2M),
+                     прив'язані коту в адмінці. Іконка + назва (кольором) +
+                     опис в одному рядку, як в оригінальній вікі.
+                ================================================== -->
+                {% if cat.abilities.all %}
+                <div class="ability-list">
+                    {% for ability in cat.abilities.all %}
+                    <div class="ability-row">
+                        {% if ability.icon %}
+                            <img src="{{ ability.icon.url }}" alt="{{ ability.name }}" class="ability-icon">
+                        {% endif %}
+                        <span class="ability-text">
+                            <span class="ability-name">{{ ability.name }}</span>{% if ability.description %} {{ ability.description }}{% endif %}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
 
             <!-- ==================================================
