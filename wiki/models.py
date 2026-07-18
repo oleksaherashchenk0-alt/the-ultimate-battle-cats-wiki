@@ -16,6 +16,17 @@ class Ability(models.Model):
         blank=True
     )
 
+    # Переклади назви й опису здібності на інші мови сайту (EN = поля
+    # name/description вище, вони лишаються базовими "за замовчуванням").
+    # Якщо переклад для якоїсь мови не заповнено - на сайті показується
+    # англійська версія (той самий принцип, що і в BattleCat).
+    name_de = models.CharField("Назва (DE)", max_length=100, blank=True)
+    name_es = models.CharField("Назва (ES)", max_length=100, blank=True)
+    name_ja = models.CharField("Назва (JA)", max_length=100, blank=True)
+    description_de = models.TextField("Опис (DE)", blank=True)
+    description_es = models.TextField("Опис (ES)", blank=True)
+    description_ja = models.TextField("Опис (JA)", blank=True)
+
     class Meta:
         verbose_name = "Здібність"
         verbose_name_plural = "Здібності"
@@ -78,6 +89,7 @@ class BattleCat(models.Model):
     hits_zombie = models.BooleanField("Zombie", default=False)
     hits_relic = models.BooleanField("Relic", default=False)
     hits_aku = models.BooleanField("Aku", default=False)
+    hits_none = models.BooleanField("None", default=False)
 
     # Здібності кота - обираються з каталогу Ability (галочками в адмінці),
     # а не окремими полями, бо здібностей десятки й список постійно росте

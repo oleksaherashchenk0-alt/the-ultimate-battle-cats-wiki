@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/favicon/android-chrome-192x192.png' %}">
     <link rel="icon" type="image/png" sizes="512x512" href="{% static 'images/favicon/android-chrome-512x512.png' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now "U" %}">
 </head>
 <body>
 
@@ -58,7 +58,7 @@
     <div class="header-spacer"></div>
 
     <!-- ГОЛОВНИЙ КОНТЕЙНЕР сторінки окремого кота -->
-    <div class="menu-page-container menu-page-container--forest" data-spirit-obstacle>
+    <div class="menu-page-container menu-page-container--forest cat-detail-container" data-spirit-obstacle>
 
         <div class="cat-detail-columns">
 
@@ -95,16 +95,16 @@
                 ================================================== -->
                 <h3 class="battle-cats-font stats-section-title" data-i18n="traits_title">Traits</h3>
                 <div class="trait-badge-row">
-                    <span class="trait-badge trait-badge--red{% if cat.hits_red %} active{% endif %}">Red</span>
-                    <span class="trait-badge trait-badge--floating{% if cat.hits_floating %} active{% endif %}">Fit</span>
-                    <span class="trait-badge trait-badge--black{% if cat.hits_black %} active{% endif %}">Drk</span>
-                    <span class="trait-badge trait-badge--metal{% if cat.hits_metal %} active{% endif %}">Mtl</span>
-                    <span class="trait-badge trait-badge--angel{% if cat.hits_angel %} active{% endif %}">Ang</span>
-                    <span class="trait-badge trait-badge--alien{% if cat.hits_alien %} active{% endif %}">Aln</span>
-                    <span class="trait-badge trait-badge--zombie{% if cat.hits_zombie %} active{% endif %}">Z</span>
-                    <span class="trait-badge trait-badge--relic{% if cat.hits_relic %} active{% endif %}">Re</span>
-                    <span class="trait-badge trait-badge--aku{% if cat.hits_aku %} active{% endif %}">Aku</span>
-                    <span class="trait-badge trait-badge--none{% if not cat.hits_red and not cat.hits_floating and not cat.hits_black and not cat.hits_metal and not cat.hits_angel and not cat.hits_alien and not cat.hits_zombie and not cat.hits_relic and not cat.hits_aku %} active{% endif %}">None</span>
+                    <img src="{% if cat.hits_red %}{% static 'images/traits/active/red.png' %}{% else %}{% static 'images/traits/inactive/red.png' %}{% endif %}" alt="Red" title="Red" class="trait-icon">
+                    <img src="{% if cat.hits_floating %}{% static 'images/traits/active/floating.png' %}{% else %}{% static 'images/traits/inactive/floating.png' %}{% endif %}" alt="Floating" title="Floating" class="trait-icon">
+                    <img src="{% if cat.hits_black %}{% static 'images/traits/active/black.png' %}{% else %}{% static 'images/traits/inactive/black.png' %}{% endif %}" alt="Black" title="Black" class="trait-icon">
+                    <img src="{% if cat.hits_metal %}{% static 'images/traits/active/metal.png' %}{% else %}{% static 'images/traits/inactive/metal.png' %}{% endif %}" alt="Metal" title="Metal" class="trait-icon">
+                    <img src="{% if cat.hits_angel %}{% static 'images/traits/active/angel.png' %}{% else %}{% static 'images/traits/inactive/angel.png' %}{% endif %}" alt="Angel" title="Angel" class="trait-icon">
+                    <img src="{% if cat.hits_alien %}{% static 'images/traits/active/alien.png' %}{% else %}{% static 'images/traits/inactive/alien.png' %}{% endif %}" alt="Alien" title="Alien" class="trait-icon">
+                    <img src="{% if cat.hits_zombie %}{% static 'images/traits/active/zombie.png' %}{% else %}{% static 'images/traits/inactive/zombie.png' %}{% endif %}" alt="Zombie" title="Zombie" class="trait-icon">
+                    <img src="{% if cat.hits_relic %}{% static 'images/traits/active/relic.png' %}{% else %}{% static 'images/traits/inactive/relic.png' %}{% endif %}" alt="Relic" title="Relic" class="trait-icon">
+                    <img src="{% if cat.hits_aku %}{% static 'images/traits/active/aku.png' %}{% else %}{% static 'images/traits/inactive/aku.png' %}{% endif %}" alt="Aku" title="Aku" class="trait-icon">
+                    <img src="{% if cat.hits_none %}{% static 'images/traits/active/none.png' %}{% else %}{% static 'images/traits/inactive/none.png' %}{% endif %}" alt="None" title="None" class="trait-icon">
                 </div>
 
                 <!-- ==================================================
@@ -120,7 +120,21 @@
                             <img src="{{ ability.icon.url }}" alt="{{ ability.name }}" class="ability-icon">
                         {% endif %}
                         <span class="ability-text">
-                            <span class="ability-name">{{ ability.name }}</span>{% if ability.description %} {{ ability.description }}{% endif %}
+                            <span class="ability-desc-collapse">
+                                <span class="ability-name i18n-dynamic"
+                                      data-en="{{ ability.name }}"
+                                      data-de="{{ ability.name_de|default:ability.name }}"
+                                      data-es="{{ ability.name_es|default:ability.name }}"
+                                      data-ja="{{ ability.name_ja|default:ability.name }}">{{ ability.name }}</span>{% if ability.description %} <span class="ability-desc i18n-dynamic"
+                                      data-en="{{ ability.description }}"
+                                      data-de="{{ ability.description_de|default:ability.description }}"
+                                      data-es="{{ ability.description_es|default:ability.description }}"
+                                      data-ja="{{ ability.description_ja|default:ability.description }}">{{ ability.description }}</span>{% endif %}
+                            </span>
+                            <button type="button" class="ability-toggle-btn" onclick="toggleAbilityDesc(this)">
+                                <span class="lbl-more" data-i18n="show_more">Show more</span>
+                                <span class="lbl-less" data-i18n="show_less">Show less</span>
+                            </button>
                         </span>
                     </div>
                     {% endfor %}
@@ -192,6 +206,33 @@
 
     <script src="{% static 'js/translations.js' %}"></script>
     <script src="{% static 'js/spirit-drag.js' %}"></script>
+
+    <script>
+        // Розгортає/згортає довгий опис здібності по кліку на кнопку.
+        // Підписи "Show more"/"Show less" - це два окремих <span> з
+        // data-i18n, які завжди лежать в DOM; перемикаємо лише яка з них
+        // видима через CSS-клас .expanded. Завдяки цьому переклад
+        // (setLanguage з translations.js) працює однаково для обох
+        // підписів у будь-якому стані, без ручного підставляння тексту.
+        function toggleAbilityDesc(btn) {
+            const wrapper = btn.closest('.ability-text');
+            const desc = wrapper.querySelector('.ability-desc-collapse');
+            const expanded = desc.classList.toggle('expanded');
+            btn.classList.toggle('expanded', expanded);
+        }
+
+        // Ховає кнопку "Показати більше", якщо опис і так короткий
+        // і не обрізається (влазить у 2 рядки повністю)
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.ability-desc-collapse').forEach(function (desc) {
+                const btn = desc.parentElement.querySelector('.ability-toggle-btn');
+                if (!btn) return;
+                if (desc.scrollHeight <= desc.clientHeight + 1) {
+                    btn.style.display = 'none';
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

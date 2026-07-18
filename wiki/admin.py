@@ -10,6 +10,16 @@ class AbilityAdmin(admin.ModelAdmin):
     list_display = ('name', 'icon')
     search_fields = ('name',)
 
+    fieldsets = (
+        ('Основне', {
+            'fields': ('name', 'icon', 'description')
+        }),
+        ('Переклади назви й опису (необов\'язково - якщо не заповнити, покаже англійську)', {
+            'fields': ('name_de', 'description_de', 'name_es', 'description_es', 'name_ja', 'description_ja'),
+            'classes': ('collapse',),
+        }),
+    )
+
 
 @admin.register(BattleCat)
 class BattleCatAdmin(admin.ModelAdmin):
@@ -52,7 +62,7 @@ class BattleCatAdmin(admin.ModelAdmin):
         ('Трейти (по яких типах ворогів кіт ефективний)', {
             'fields': (
                 'hits_red', 'hits_floating', 'hits_black', 'hits_metal', 'hits_angel',
-                'hits_alien', 'hits_zombie', 'hits_relic', 'hits_aku',
+                'hits_alien', 'hits_zombie', 'hits_relic', 'hits_aku', 'hits_none',
             )
         }),
         ('Здібності', {

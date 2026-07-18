@@ -346,6 +346,13 @@ td {
     background-position: center;
 }
 
+/* Прибираємо зелену рамку навколо контенту саме на сторінці кота -
+   там вона зайва, картку робимо "відкритою", без бордера й тіні. */
+.cat-detail-container {
+    border: none;
+    box-shadow: none;
+}
+
 /* ====================================================
    ДУХИ, що літають по БОКОВИХ ПОРОЖНІХ ПОЛЯХ сторінки
    (там, де просто темний фон, поза основним контентом) -
@@ -926,7 +933,7 @@ td {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
+    gap: 3px;
     margin-top: 12px;
 }
 
@@ -948,16 +955,19 @@ td {
     box-shadow: 0 0 0 1px rgba(255,255,255,0.25);
 }
 
-.trait-badge--red      { background: #e6480f; }
-.trait-badge--floating { background: #3f7a4f; }
-.trait-badge--black     { background: #2b2b2b; }
-.trait-badge--metal    { background: #5c5c5c; }
-.trait-badge--angel    { background: #8a7a1e; }
-.trait-badge--alien    { background: #157a68; }
-.trait-badge--zombie   { background: #6b2b82; }
-.trait-badge--relic    { background: #565f1e; }
-.trait-badge--aku      { background: #234e75; }
 .trait-badge--none     { background: #555a5f; }
+
+/* Іконки трейтів - тепер це готові кольорові (active) або сірі (inactive)
+   картинки з двох окремих папок (traits/active/, traits/inactive/),
+   шаблон сам обирає потрібний файл. Ніяких CSS-фільтрів не потрібно -
+   тому це однаково надійно працює для кольорових і повністю сірих
+   (напр. None) іконок. */
+.trait-icon {
+    width: 24px;
+    height: 28px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
 
 /* ====================================================
    ЗДІБНОСТІ на сторінці кота - іконка + назва (кольором)
@@ -988,6 +998,55 @@ td {
     font-size: 13.5px;
     line-height: 1.45;
     color: #d7ded9;
+    display: block;
+}
+
+/* Довгий опис здібності обрізається до 2 рядків, поки не натиснути
+   "Показати більше" - це рятує сторінку від розтягування (напр. Aku Shield) */
+.ability-desc-collapse {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ability-desc-collapse.expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    overflow: visible;
+}
+
+.ability-toggle-btn {
+    display: block;
+    margin-top: 2px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: #6fbf8f;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.ability-toggle-btn:hover {
+    color: #9adcb5;
+}
+
+/* Кнопка тримає в DOM обидва підписи одразу (щоб переклад завжди
+   працював), а видно лише один - залежно від стану .expanded */
+.ability-toggle-btn .lbl-less {
+    display: none;
+}
+
+.ability-toggle-btn.expanded .lbl-more {
+    display: none;
+}
+
+.ability-toggle-btn.expanded .lbl-less {
+    display: inline;
 }
 
 .ability-name {

@@ -11,6 +11,18 @@
 ==================================================== */
 
 const DICTIONARY = {
+    show_more: {
+        en: "Show more",
+        de: "Mehr anzeigen",
+        es: "Mostrar más",
+        ja: "もっと見る"
+    },
+    show_less: {
+        en: "Show less",
+        de: "Weniger anzeigen",
+        es: "Mostrar menos",
+        ja: "少なく表示"
+    },
     site_title: {
         en: "The Battle Cats Wiki",
         de: "Das Battle Cats Wiki",
