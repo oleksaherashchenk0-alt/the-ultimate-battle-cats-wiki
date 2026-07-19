@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Units Menu | Battle Cats Wiki</title>
+    <!-- Favicon (іконка вкладки браузера): квадратний набір іконок різних розмірів,
+         щоб браузер брав чіткий варіант замість стиснутого прямокутного лого -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon/favicon-16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'images/favicon/favicon-48x48.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/favicon/android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'images/favicon/android-chrome-512x512.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now "U" %}">
+</head>
+<body>
+
+    <!-- ДУХИ, що літають по бокових порожніх полях сторінки (position: fixed,
+         тому видно на будь-якому місці скролу). 8 духів: по 4 зліва і справа -->
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--1">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--2">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--3">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--4">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--5">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--6">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--7">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--8">
+
+    <!-- Та сама шапка, що і на головній сторінці: лого, текст, кнопка мови, гіфка -->
+    <div class="wiki-header" data-spirit-obstacle>
+        <div class="header-left">
+            <img src="{% static 'images/wiki_logo2.png' %}" alt="Wiki logo" class="wiki-logo">
+            <div class="header-text">
+                <h1 data-i18n="site_title">The Battle Cats Wiki</h1>
+                <p data-i18n="site_subtitle">Welcome to the cat encyclopedia. | By: Huki</p>
+            </div>
+        </div>
+
+        <!-- Права частина шапки: кнопка мови + гіфка поруч -->
+        <div class="header-right">
+            <div class="lang-switch">
+                <button class="lang-btn" type="button" id="langBtn" onclick="document.getElementById('langDropdown').classList.toggle('open')">EN ▾</button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" onclick="setLanguage('en'); return false;">English</a>
+                    <a href="#" onclick="setLanguage('de'); return false;">Deutsch</a>
+                    <a href="#" onclick="setLanguage('es'); return false;">Español</a>
+                    <a href="#" onclick="setLanguage('ja'); return false;">日本語</a>
+                </div>
+            </div>
+
+            <img src="{% static 'images/falling.gif' %}" alt="cat gif" class="header-gif">
+        </div>
+    </div>
+
+    <!-- Кнопка "Back" - ПІД лого, але ЗА плашкою шапки (нижчий z-index за
+         саму wiki-header, тому видно лише нижче синьо-зеленої плашки) -->
+    <a href="{% url 'home' %}" class="back-btn-under-header">
+        <span class="battle-cats-font" data-i18n="back_short">&larr; Back</span>
+    </a>
+
+    <div class="header-spacer"></div>
+
+    <!-- ГОЛОВНИЙ КОНТЕЙНЕР з фоновим зображенням лісу -->
+    <div class="menu-page-container menu-page-container--forest" data-spirit-obstacle>
+
+        <h2 class="battle-cats-font" style="margin-bottom: 20px;" data-i18n="units_catalog_title">Cat Units Catalog</h2>
+
+        <!-- 7 рядків-рідкостей, розташовані ВЕРТИКАЛЬНО один під одним.
+             Кожен - це КНОПКА (не посилання), яка при кліку розгортає
+             панель-акордеон ПРЯМО ПІД СОБОЮ (slide down), без переходу
+             на іншу сторінку. Туди пізніше додамо реальних котів. -->
+        <div class="rarity-list">
+
+            <div class="rarity-item">
+                <button type="button" class="rarity-btn" onclick="toggleRarityPanel('panel-normal', this)">
+                    <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--normal" alt="Normal">
+                    <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_normal">Normal Cats</span>
+                </button>
+                <div class="rarity-panel" id="panel-normal">
+                    <div class="rarity-panel-cats">
+                        {% for cat in cats_by_rarity.normal %}
+                        <a href="{% url 'cat_detail' cat.slug %}" class="cat-card cat-card--mini cat-photo-tooltip">
+                            {% if cat.image %}
+                                <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
+                            {% else %}
+                                <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
+                            {% endif %}
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="rarity-item">
+                <button type="button" class="rarity-btn" onclick="toggleRarityPanel('panel-special', this)">
+                    <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--special" alt="Special">
+                    <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_special">Special Cats</span>
+                </button>
+                <div class="rarity-panel" id="panel-special">
+                    <div class="rarity-panel-cats">
+                        {% for cat in cats_by_rarity.special %}
+                        <a href="{% url 'cat_detail' cat.slug %}" class="cat-card cat-card--mini cat-photo-tooltip">
+                            {% if cat.image %}
+                                <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
+                            {% else %}
+                                <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
+                            {% endif %}
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="rarity-item">
+                <button type="button" class="rarity-btn" onclick="toggleRarityPanel('panel-rare', this)">
+                    <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--rare" alt="Rare">
+                    <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_rare">Rare Cats</span>
+                </button>
+                <div class="rarity-panel" id="panel-rare">
+                    <div class="rarity-panel-cats">
+                        {% for cat in cats_by_rarity.rare %}
+                        <a href="{% url 'cat_detail' cat.slug %}" class="cat-card cat-card--mini cat-photo-tooltip">
+                            {% if cat.image %}
+                                <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
+                            {% else %}
+                                <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
+                            {% endif %}
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="rarity-item">
+                <button type="button" class="rarity-btn" onclick="toggleRarityPanel('panel-super-rare', this)">
+                    <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--super-rare" alt="Super Rare">
+                    <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_super_rare">Super Rare Cats</span>
+                </button>
+                <div class="rarity-panel" id="panel-super-rare">
+                    <div class="rarity-panel-cats">
+                        {% for cat in cats_by_rarity.super_rare %}
+                        <a href="{% url 'cat_detail' cat.slug %}" class="cat-card cat-card--mini cat-photo-tooltip">
+                            {% if cat.image %}
+                                <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
+                            {% else %}
+                                <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
+                            {% endif %}
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="rarity-item">
+                <button type="button" class="rarity-btn" onclick="toggleRarityPanel('panel-uber', this)">
+                    <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--uber" alt="Uber Rare">
+                    <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_uber">Uber Rare Cats</span>
+                </button>
+                <div class="rarity-panel" id="panel-uber">
+                    <div class="rarity-panel-cats">
+                        {% for cat in cats_by_rarity.uber_rare %}
+                        <a href="{% url 'cat_detail' cat.slug %}" class="cat-card cat-card--mini cat-photo-tooltip">
+                            {% if cat.image %}
+                                <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
+                            {% else %}
+                                <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
+                            {% endif %}
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="rarity-item">
+                <button type="button" class="rarity-btn" onclick="toggleRarityPanel('panel-legend', this)">
+                    <div class="rarity-icon-wrap--legend">
+                        <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--legend" alt="Legend Rare">
+                    </div>
+                    <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_legend">Legend Rare Cats</span>
+                </button>
+                <div class="rarity-panel" id="panel-legend">
+                    <div class="rarity-panel-cats">
+                        {% for cat in cats_by_rarity.legend_rare %}
+                        <a href="{% url 'cat_detail' cat.slug %}" class="cat-card cat-card--mini cat-photo-tooltip">
+                            {% if cat.image %}
+                                <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
+                            {% else %}
+                                <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
+                            {% endif %}
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="rarity-item">
+                <button type="button" class="rarity-btn" onclick="toggleRarityPanel('panel-limited', this)">
+                    <div class="rarity-icon-wrap--limited">
+                        <img src="{% static 'images/rarity_icon.png' %}" class="rarity-icon rarity-icon--limited" alt="Limited">
+                    </div>
+                    <span class="battle-cats-font rarity-btn-text" data-i18n="rarity_limited">Limited Cats</span>
+                </button>
+                <div class="rarity-panel" id="panel-limited">
+                    <div class="rarity-panel-cats">
+                        {% for cat in cats_by_rarity.limited %}
+                        <a href="{% url 'cat_detail' cat.slug %}" class="cat-card cat-card--mini cat-photo-tooltip">
+                            {% if cat.image %}
+                                <img src="{{ cat.image.url }}" class="cat-img" alt="{{ cat.title }}">
+                            {% else %}
+                                <img src="{% static 'images/cat_icon.png' %}" class="cat-img" alt="No image">
+                            {% endif %}
+                            <!-- Спливаюча підказка при наведенні - показує title і коротку mini_info,
+                                 яку задають в адмінці окремим полем -->
+                            <span class="cat-photo-tooltip-bubble">
+                                <strong>{{ cat.title }}</strong>
+                                {% if cat.mini_info %}<span class="tooltip-info-text">{{ cat.mini_info }}</span>{% endif %}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <p class="rarity-panel-placeholder" data-i18n="rarity_panel_coming_soon">Cats of this rarity will appear here soon!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Той самий спільний файл словника перекладу, що і на головній сторінці -->
+    <script src="{% static 'js/translations.js' %}"></script>
+    <!-- Робить духів по боках перетягуваними мишкою/пальцем, з плавним
+         інерційним рухом, як маленькі об'єкти в невагомості -->
+    <script src="{% static 'js/spirit-drag.js' %}"></script>
+
+    <!-- Логіка акордеону: відкриває/закриває панель під клікнутою кнопкою рідкості -->
+    <script>
+        // Слухач transitionend вішається ОДИН РАЗ на кожну панель (а не
+        // щоразу заново при кліку) і завжди перевіряє, чи панель ще й
+        // справді має бути відкритою на момент спрацювання. Без цієї
+        // перевірки швидкий клік "відкрити -> одразу закрити" міг
+        // спіймати застарілу подію transitionend від відкриття і
+        // виставити overflow: visible панелі, яка вже мала бути згорнута -
+        // тоді її вміст (коти) "протікав" поверх кнопок нижче по списку.
+        document.querySelectorAll('.rarity-panel').forEach(function (panel) {
+            panel.addEventListener('transitionend', function (e) {
+                if (e.propertyName !== 'max-height') return;
+                if (panel.classList.contains('open')) {
+                    panel.style.overflow = 'visible';
+                } else {
+                    panel.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        function closeRarityPanel(panel) {
+            var current = panel.getBoundingClientRect().height;
+            panel.style.overflow = 'hidden';
+            panel.style.maxHeight = current + 'px';
+            void panel.offsetHeight;
+            panel.classList.remove('open');
+            panel.style.maxHeight = '0px';
+        }
+
+        function openRarityPanel(panel) {
+            panel.style.overflow = 'hidden';
+            panel.classList.add('open');
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+        }
+
+        function toggleRarityPanel(panelId, btnEl) {
+            var panel = document.getElementById(panelId);
+            var isOpen = panel.classList.contains('open');
+
+            document.querySelectorAll('.rarity-panel.open').forEach(function (p) {
+                if (p !== panel) {
+                    closeRarityPanel(p);
+                }
+            });
+            document.querySelectorAll('.rarity-btn.active').forEach(function (b) {
+                if (b !== btnEl) b.classList.remove('active');
+            });
+
+            if (isOpen) {
+                closeRarityPanel(panel);
+                btnEl.classList.remove('active');
+            } else {
+                openRarityPanel(panel);
+                btnEl.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>

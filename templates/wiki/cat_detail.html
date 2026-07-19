@@ -1,0 +1,306 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ cat.title }} | Battle Cats Wiki</title>
+    <meta name="description" content="{{ cat.title }} - {{ cat.content|truncatechars:155 }}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <!-- Open Graph / соцмережі (Discord, Twitter, Facebook і т.д.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ cat.title }} | Battle Cats Wiki">
+    <meta property="og:description" content="{{ cat.content|truncatechars:155 }}">
+    {% if cat.image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ cat.image.url }}">{% endif %}
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon/favicon-16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'images/favicon/favicon-48x48.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/favicon/android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'images/favicon/android-chrome-512x512.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now "U" %}">
+</head>
+<body>
+
+    <!-- Духи по боках сторінки (той самий ефект, що і на інших сторінках) -->
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--1">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--2">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--3">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--4">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--5">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--6">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--7">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--8">
+
+    <!-- Шапка сайту -->
+    <div class="wiki-header" data-spirit-obstacle>
+        <div class="header-left">
+            <img src="{% static 'images/wiki_logo2.png' %}" alt="Wiki logo" class="wiki-logo">
+            <div class="header-text">
+                <h1 data-i18n="site_title">The Battle Cats Wiki</h1>
+                <p data-i18n="site_subtitle">Welcome to the cat encyclopedia. | By: Huki</p>
+            </div>
+        </div>
+
+        <!-- Права частина шапки: кнопка мови + гіфка поруч (та сама, що і на інших сторінках) -->
+        <div class="header-right">
+            <div class="lang-switch">
+                <button class="lang-btn" type="button" id="langBtn" onclick="document.getElementById('langDropdown').classList.toggle('open')">EN ▾</button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" onclick="setLanguage('en'); return false;">English</a>
+                    <a href="#" onclick="setLanguage('de'); return false;">Deutsch</a>
+                    <a href="#" onclick="setLanguage('es'); return false;">Español</a>
+                    <a href="#" onclick="setLanguage('ja'); return false;">日本語</a>
+                </div>
+            </div>
+
+            <img src="{% static 'images/falling.gif' %}" alt="cat gif" class="header-gif">
+        </div>
+    </div>
+
+    <a href="{% url 'units_menu' %}" class="back-btn-under-header">
+        <span class="battle-cats-font" data-i18n="back_short">&larr; Back</span>
+    </a>
+
+    <div class="header-spacer"></div>
+
+    <!-- ГОЛОВНИЙ КОНТЕЙНЕР сторінки окремого кота -->
+    <div class="menu-page-container menu-page-container--forest cat-detail-container" data-spirit-obstacle>
+
+        <div class="cat-detail-columns">
+
+            <div class="cat-detail-left">
+                <div class="cat-detail-top">
+                    {% if cat.image %}
+                        <img src="{{ cat.image.url }}" class="cat-detail-img" alt="{{ cat.title }}" id="catFormImg">
+                    {% else %}
+                        <img src="{% static 'images/cat_icon.png' %}" class="cat-detail-img" alt="No image" id="catFormImg">
+                    {% endif %}
+
+                    <div class="cat-detail-heading">
+                        <h2 class="battle-cats-font i18n-dynamic" id="catFormName"
+                            data-en="{{ cat.title }}"
+                            data-de="{{ cat.title_de|default:cat.title }}"
+                            data-es="{{ cat.title_es|default:cat.title }}"
+                            data-ja="{{ cat.title_ja|default:cat.title }}">{{ cat.title }}</h2>
+                        <p><span class="stats-badge"><strong data-i18n="rarity_label">Rarity:</strong> {{ cat.get_status_display }}</span></p>
+                    </div>
+                </div>
+
+                {% if cat.forms.all %}
+                <!-- ==================================================
+                     ПЕРЕМИКАЧ ФОРМ ЕВОЛЮЦІЇ - перша вкладка завжди Base
+                     Form (це сам кіт, його основні поля), далі йдуть
+                     Evolved/True/Ultra - скільки їх додано в адмінці.
+                     Перемикання без перезавантаження сторінки (JS),
+                     міняє тільки ім'я/іконку/HP/Attack/DPS.
+                ================================================== -->
+                <div class="cat-form-tabs" id="catFormTabs">
+                    <button type="button" class="cat-form-tab active" data-form-index="0" onclick="switchCatForm(0, this)" data-i18n="form_base">Base Form</button>
+                    {% for form in cat.forms.all %}
+                    <button type="button" class="cat-form-tab" data-form-index="{{ forloop.counter }}" onclick="switchCatForm({{ forloop.counter }}, this)">{{ form.get_stage_display }}</button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <p class="cat-detail-desc i18n-dynamic"
+                   data-en="{{ cat.content }}"
+                   data-de="{{ cat.content_de|default:cat.content }}"
+                   data-es="{{ cat.content_es|default:cat.content }}"
+                   data-ja="{{ cat.content_ja|default:cat.content }}">{{ cat.content }}</p>
+
+                <!-- ==================================================
+                     ТРЕЙТИ - кольорові текстові бейджі (як в оригінальній
+                     Battle Cats wiki), кожен трейт має свій колір фону.
+                     Неактивні - той самий колір, але притлумлений (не
+                     повністю сірий), активні - яскраві на весь колір.
+                     "None" підсвічується, якщо в кота взагалі немає трейтів.
+                ================================================== -->
+                <h3 class="battle-cats-font stats-section-title" data-i18n="traits_title">Traits</h3>
+                <div class="trait-badge-row">
+                    <img src="{% if cat.hits_red %}{% static 'images/traits/active/red.png' %}{% else %}{% static 'images/traits/inactive/red.png' %}{% endif %}" alt="Red" title="Red" class="trait-icon">
+                    <img src="{% if cat.hits_floating %}{% static 'images/traits/active/floating.png' %}{% else %}{% static 'images/traits/inactive/floating.png' %}{% endif %}" alt="Floating" title="Floating" class="trait-icon">
+                    <img src="{% if cat.hits_black %}{% static 'images/traits/active/black.png' %}{% else %}{% static 'images/traits/inactive/black.png' %}{% endif %}" alt="Black" title="Black" class="trait-icon">
+                    <img src="{% if cat.hits_metal %}{% static 'images/traits/active/metal.png' %}{% else %}{% static 'images/traits/inactive/metal.png' %}{% endif %}" alt="Metal" title="Metal" class="trait-icon">
+                    <img src="{% if cat.hits_angel %}{% static 'images/traits/active/angel.png' %}{% else %}{% static 'images/traits/inactive/angel.png' %}{% endif %}" alt="Angel" title="Angel" class="trait-icon">
+                    <img src="{% if cat.hits_alien %}{% static 'images/traits/active/alien.png' %}{% else %}{% static 'images/traits/inactive/alien.png' %}{% endif %}" alt="Alien" title="Alien" class="trait-icon">
+                    <img src="{% if cat.hits_zombie %}{% static 'images/traits/active/zombie.png' %}{% else %}{% static 'images/traits/inactive/zombie.png' %}{% endif %}" alt="Zombie" title="Zombie" class="trait-icon">
+                    <img src="{% if cat.hits_relic %}{% static 'images/traits/active/relic.png' %}{% else %}{% static 'images/traits/inactive/relic.png' %}{% endif %}" alt="Relic" title="Relic" class="trait-icon">
+                    <img src="{% if cat.hits_aku %}{% static 'images/traits/active/aku.png' %}{% else %}{% static 'images/traits/inactive/aku.png' %}{% endif %}" alt="Aku" title="Aku" class="trait-icon">
+                    <img src="{% if cat.hits_none %}{% static 'images/traits/active/none.png' %}{% else %}{% static 'images/traits/inactive/none.png' %}{% endif %}" alt="None" title="None" class="trait-icon">
+                </div>
+
+                <!-- ==================================================
+                     ЗДІБНОСТІ - беруться з каталогу Ability (M2M),
+                     прив'язані коту в адмінці. Іконка + назва (кольором) +
+                     опис в одному рядку, як в оригінальній вікі.
+                ================================================== -->
+                {% if cat.abilities.all %}
+                <div class="ability-list">
+                    {% for ability in cat.abilities.all %}
+                    <div class="ability-row">
+                        {% if ability.icon %}
+                            <img src="{{ ability.icon.url }}" alt="{{ ability.name }}" class="ability-icon">
+                        {% endif %}
+                        <span class="ability-text">
+                            <span class="ability-desc-collapse">
+                                <span class="ability-name i18n-dynamic"
+                                      data-en="{{ ability.name }}"
+                                      data-de="{{ ability.name_de|default:ability.name }}"
+                                      data-es="{{ ability.name_es|default:ability.name }}"
+                                      data-ja="{{ ability.name_ja|default:ability.name }}">{{ ability.name }}</span>{% if ability.description %} <span class="ability-desc i18n-dynamic"
+                                      data-en="{{ ability.description }}"
+                                      data-de="{{ ability.description_de|default:ability.description }}"
+                                      data-es="{{ ability.description_es|default:ability.description }}"
+                                      data-ja="{{ ability.description_ja|default:ability.description }}">{{ ability.description }}</span>{% endif %}
+                            </span>
+                            <button type="button" class="ability-toggle-btn" onclick="toggleAbilityDesc(this)">
+                                <span class="lbl-more" data-i18n="show_more">Show more</span>
+                                <span class="lbl-less" data-i18n="show_less">Show less</span>
+                            </button>
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- ==================================================
+                 СІТКА КАРТОК ЗІ СТАТАМИ -
+                 усі підписи через data-i18n - перекладаються разом з усім
+                 сайтом при виборі мови; самі цифри статів - без перекладу
+            ================================================== -->
+            <div class="cat-detail-right">
+                <h3 class="battle-cats-font stats-section-title" data-i18n="stats_section_main">Stats</h3>
+                <div class="cat-stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_hp">Health</div>
+                <div class="stat-card-value" id="statHpValue">{{ cat.hp_stat }} <span class="stat-card-unit">HP</span></div>
+                <div class="stat-card-sub">{{ cat.knockback_count }} <span data-i18n="unit_knockbacks_short">Knockbacks</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_attack_power">Attack Power</div>
+                <div class="stat-card-value stat-card-value--accent" id="statAttackValue">{{ cat.attack_power }} <span data-i18n="unit_damage">Damage</span></div>
+                <div class="stat-card-sub">(<span id="statDpsValue">{{ cat.dps_stat }}</span> <span data-i18n="unit_dps_short">DPS</span>)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_range">Range</div>
+                <div class="stat-card-value">{{ cat.attack_range }}</div>
+                <div class="stat-card-sub" data-i18n="unit_melee_single">Melee, single target</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_speed">Speed</div>
+                <div class="stat-card-value">{{ cat.move_speed }}</div>
+                <div class="stat-card-sub" data-i18n="unit_speed_note">Movement speed</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_attack_frequency">Attack Frequency</div>
+                <div class="stat-card-value">{{ cat.attack_frequency_seconds }}<span data-i18n="unit_seconds_short">s</span></div>
+                <div class="stat-card-sub"><span data-i18n="stat_foreswing">Foreswing</span> {{ cat.foreswing_seconds }}<span data-i18n="unit_seconds_short">s</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_recharge">Recharge</div>
+                <div class="stat-card-value">{{ cat.recharge_min_seconds }}–{{ cat.recharge_max_seconds }}<span data-i18n="unit_seconds_short">s</span></div>
+                <div class="stat-card-sub" data-i18n="unit_recharge_note">Depends on Cat Cannon / base level upgrades</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-label" data-i18n="stat_cost_default">Default Price</div>
+                <div class="stat-card-value">{{ cat.cost_chapter1 }}¢</div>
+                <div class="stat-card-sub">
+                    <span data-i18n="unit_chapter">Ch.</span>1: {{ cat.cost_chapter1 }}¢ ·
+                    <span data-i18n="unit_chapter">Ch.</span>2: {{ cat.cost_chapter2 }}¢ ·
+                    <span data-i18n="unit_chapter">Ch.</span>3: {{ cat.cost_chapter3 }}¢
+                </div>
+            </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="{% static 'js/translations.js' %}"></script>
+    <script src="{% static 'js/spirit-drag.js' %}"></script>
+
+    <script>
+        // Розгортає/згортає довгий опис здібності по кліку на кнопку.
+        // Підписи "Show more"/"Show less" - це два окремих <span> з
+        // data-i18n, які завжди лежать в DOM; перемикаємо лише яка з них
+        // видима через CSS-клас .expanded. Завдяки цьому переклад
+        // (setLanguage з translations.js) працює однаково для обох
+        // підписів у будь-якому стані, без ручного підставляння тексту.
+        function toggleAbilityDesc(btn) {
+            const wrapper = btn.closest('.ability-text');
+            const desc = wrapper.querySelector('.ability-desc-collapse');
+            const expanded = desc.classList.toggle('expanded');
+            btn.classList.toggle('expanded', expanded);
+        }
+
+        // Ховає кнопку "Показати більше", якщо опис і так короткий
+        // і не обрізається (влазить у 2 рядки повністю)
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.ability-desc-collapse').forEach(function (desc) {
+                const btn = desc.parentElement.querySelector('.ability-toggle-btn');
+                if (!btn) return;
+                if (desc.scrollHeight <= desc.clientHeight + 1) {
+                    btn.style.display = 'none';
+                }
+            });
+        });
+
+        // Перемикання форм еволюції (Base/Evolved/True/Ultra) без
+        // перезавантаження сторінки. Дані форм лежать у JSON-скрипті
+        // #cat-forms-data (форма 0 - завжди базовий кіт).
+        var CAT_FORMS_DATA = null;
+        var formsDataEl = document.getElementById('cat-forms-data');
+        if (formsDataEl) {
+            CAT_FORMS_DATA = JSON.parse(formsDataEl.textContent);
+        }
+
+        function switchCatForm(index, btn) {
+            if (!CAT_FORMS_DATA || !CAT_FORMS_DATA[index]) return;
+            var form = CAT_FORMS_DATA[index];
+
+            document.querySelectorAll('.cat-form-tab').forEach(function (b) {
+                b.classList.remove('active');
+            });
+            btn.classList.add('active');
+
+            var nameEl = document.getElementById('catFormName');
+            nameEl.textContent = form.name;
+            nameEl.setAttribute('data-en', form.name);
+            nameEl.setAttribute('data-de', form.name_de || form.name);
+            nameEl.setAttribute('data-es', form.name_es || form.name);
+            nameEl.setAttribute('data-ja', form.name_ja || form.name);
+
+            if (form.icon) {
+                document.getElementById('catFormImg').src = form.icon;
+            }
+            document.getElementById('statHpValue').firstChild.textContent = form.hp_stat + ' ';
+            document.getElementById('statAttackValue').firstChild.textContent = form.attack_power + ' ';
+            document.getElementById('statDpsValue').textContent = form.dps_stat;
+
+            var savedLang = localStorage.getItem('chosenLang');
+            if (savedLang && savedLang !== 'en' && nameEl.getAttribute('data-' + savedLang)) {
+                nameEl.textContent = nameEl.getAttribute('data-' + savedLang);
+            }
+        }
+    </script>
+
+    {% if cat.forms.all %}
+    {{ cat_forms_json|json_script:"cat-forms-data" }}
+    {% endif %}
+
+</body>
+</html>

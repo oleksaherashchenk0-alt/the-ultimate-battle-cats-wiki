@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кота не знайдено | Battle Cats Wiki</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now "U" %}">
+</head>
+<body>
+    <div class="header-spacer" style="display:none;"></div>
+    <div class="menu-page-container" style="max-width:600px; margin:60px auto; text-align:center;">
+        <h2 class="battle-cats-font" style="font-size:26px; color:#ffaa00; margin-bottom:10px;">
+            Ой, цю сторінку з'їв Когане Кот 🐱
+        </h2>
+        <p style="color:#d7ded9; font-size:15px; margin-bottom:24px;">
+            Сторінки, яку ти шукаєш, не існує - можливо, посилання застаріле
+            або кота ще не додали на вікі.
+        </p>
+        <a href="{% url 'home' %}" class="back-btn">
+            <span class="battle-cats-font">← На головну</span>
+        </a>
+    </div>
+</body>
+</html>
