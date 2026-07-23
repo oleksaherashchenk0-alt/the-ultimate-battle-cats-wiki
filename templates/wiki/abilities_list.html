@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abilities | Battle Cats Wiki</title>
+    <meta name="description" content="Повний список здібностей котів у Battle Cats з детальним описом кожної.">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon/favicon-16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'images/favicon/favicon-48x48.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/favicon/android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'images/favicon/android-chrome-512x512.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now "U" %}">
+</head>
+<body>
+
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--1">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--2">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--left spirit-icon--3">
+    <img src="{% static 'images/spirit_icon.png' %}" alt="" class="spirit-icon spirit-icon--right spirit-icon--4">
+
+    <div class="wiki-header" data-spirit-obstacle>
+        <div class="header-left">
+            <img src="{% static 'images/wiki_logo2.png' %}" alt="Wiki logo" class="wiki-logo">
+            <div class="header-text">
+                <h1 data-i18n="site_title">The Battle Cats Wiki</h1>
+                <p data-i18n="site_subtitle">Welcome to the cat encyclopedia. | By: Huki</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="lang-switch">
+                <button class="lang-btn" type="button" id="langBtn" onclick="document.getElementById('langDropdown').classList.toggle('open')">EN ▾</button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" onclick="setLanguage('en'); return false;">English</a>
+                    <a href="#" onclick="setLanguage('de'); return false;">Deutsch</a>
+                    <a href="#" onclick="setLanguage('es'); return false;">Español</a>
+                    <a href="#" onclick="setLanguage('ja'); return false;">日本語</a>
+                </div>
+            </div>
+            <img src="{% static 'images/falling.gif' %}" alt="cat gif" class="header-gif">
+        </div>
+    </div>
+
+    <a href="{% url 'home' %}" class="back-btn-under-header">
+        <span class="battle-cats-font" data-i18n="back_short">&larr; Back</span>
+    </a>
+
+    <div class="header-spacer"></div>
+
+    <div class="menu-page-container menu-page-container--forest" data-spirit-obstacle>
+
+        <h2 class="battle-cats-font" style="margin-bottom: 20px;" data-i18n="abilities_page_title">Abilities</h2>
+
+        <div class="abilities-page-list">
+            {% for ability in abilities %}
+            <div class="ability-page-row" id="ability-{{ ability.id }}">
+                {% if ability.icon %}
+                    <img src="{{ ability.icon.url }}" alt="{{ ability.name }}" class="ability-page-icon">
+                {% endif %}
+                <div class="ability-page-text">
+                    <h3 class="ability-page-name i18n-dynamic"
+                        data-en="{{ ability.name }}"
+                        data-de="{{ ability.name_de|default:ability.name }}"
+                        data-es="{{ ability.name_es|default:ability.name }}"
+                        data-ja="{{ ability.name_ja|default:ability.name }}">{{ ability.name }}</h3>
+                    <p class="ability-page-desc i18n-dynamic"
+                       data-en="{{ ability.description }}"
+                       data-de="{{ ability.description_de|default:ability.description }}"
+                       data-es="{{ ability.description_es|default:ability.description }}"
+                       data-ja="{{ ability.description_ja|default:ability.description }}">{{ ability.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <script src="{% static 'js/translations.js' %}"></script>
+    <script src="{% static 'js/spirit-drag.js' %}"></script>
+
+    <script>
+        // Якщо прийшли по посиланню з якорем (#ability-12) - підсвічуємо
+        // цю здібність на секунду, щоб було видно, куди саме привело
+        if (window.location.hash) {
+            var target = document.querySelector(window.location.hash);
+            if (target) {
+                target.classList.add('ability-page-row--highlight');
+                setTimeout(function () {
+                    target.classList.remove('ability-page-row--highlight');
+                }, 2000);
+            }
+        }
+    </script>
+
+</body>
+</html>

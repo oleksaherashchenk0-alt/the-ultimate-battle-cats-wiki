@@ -16,12 +16,12 @@ class AbilityAdmin(admin.ModelAdmin):
     # Окремий розділ в адмінці "Здібності" - тут ведеш каталог
     # (назва + іконка + опис), а потім прив'язуєш потрібні коту
     # галочками в самій картці кота нижче
-    list_display = ('name', 'icon')
+    list_display = ('name', 'icon', 'icon_only')
     search_fields = ('name',)
 
     fieldsets = (
         ('Основне', {
-            'fields': ('name', 'icon', 'description')
+            'fields': ('name', 'icon', 'description', 'icon_only')
         }),
         ('Переклади назви й опису (необов\'язково - якщо не заповнити, покаже англійську)', {
             'fields': ('name_de', 'description_de', 'name_es', 'description_es', 'name_ja', 'description_ja'),

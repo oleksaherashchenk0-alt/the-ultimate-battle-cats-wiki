@@ -135,33 +135,42 @@
 
                 <!-- ==================================================
                      ЗДІБНОСТІ - беруться з каталогу Ability (M2M),
-                     прив'язані коту в адмінці. Іконка + назва (кольором) +
-                     опис в одному рядку, як в оригінальній вікі.
+                     прив'язані коту в адмінці. Здібність без опису
+                     (icon_only) не займає свій рядок - її іконка
+                     "приклеюється" в той самий рядок, що й наступна
+                     здібність (prefix_icons), тому вони йдуть впритул
+                     одна до одної, а не одна над одною.
                 ================================================== -->
-                {% if cat.abilities.all %}
+                {% if ability_rows %}
                 <div class="ability-list">
-                    {% for ability in cat.abilities.all %}
+                    {% for row in ability_rows %}
                     <div class="ability-row">
-                        {% if ability.icon %}
-                            <img src="{{ ability.icon.url }}" alt="{{ ability.name }}" class="ability-icon">
-                        {% endif %}
-                        <span class="ability-text">
-                            <span class="ability-desc-collapse">
-                                <span class="ability-name i18n-dynamic"
-                                      data-en="{{ ability.name }}"
-                                      data-de="{{ ability.name_de|default:ability.name }}"
-                                      data-es="{{ ability.name_es|default:ability.name }}"
-                                      data-ja="{{ ability.name_ja|default:ability.name }}">{{ ability.name }}</span>{% if ability.description %} <span class="ability-desc i18n-dynamic"
-                                      data-en="{{ ability.description }}"
-                                      data-de="{{ ability.description_de|default:ability.description }}"
-                                      data-es="{{ ability.description_es|default:ability.description }}"
-                                      data-ja="{{ ability.description_ja|default:ability.description }}">{{ ability.description }}</span>{% endif %}
+                        {% for icon_ability in row.prefix_icons %}
+                            {% if icon_ability.icon %}
+                            <img src="{{ icon_ability.icon.url }}" alt="{{ icon_ability.name }}" title="{{ icon_ability.name }}" class="ability-icon-only">
+                            {% endif %}
+                        {% endfor %}
+                        {% if row.ability %}
+                            {% if row.ability.icon %}
+                                <img src="{{ row.ability.icon.url }}" alt="{{ row.ability.name }}" class="ability-icon">
+                            {% endif %}
+                            <span class="ability-text">
+                                <span class="ability-desc-collapse">
+                                    <span class="ability-name i18n-dynamic"
+                                          data-en="{{ row.ability.name }}"
+                                          data-de="{{ row.ability.name_de|default:row.ability.name }}"
+                                          data-es="{{ row.ability.name_es|default:row.ability.name }}"
+                                          data-ja="{{ row.ability.name_ja|default:row.ability.name }}">{{ row.ability.name }}</span>{% if row.ability.description %} <span class="ability-desc i18n-dynamic"
+                                          data-en="{{ row.ability.description }}"
+                                          data-de="{{ row.ability.description_de|default:row.ability.description }}"
+                                          data-es="{{ row.ability.description_es|default:row.ability.description }}"
+                                          data-ja="{{ row.ability.description_ja|default:row.ability.description }}">{{ row.ability.description }}</span>{% endif %}
+                                </span>
+                                {% if row.ability.description %}
+                                <a href="{% url 'abilities_list' %}#ability-{{ row.ability.id }}" class="ability-toggle-btn" data-i18n="show_more">Show more</a>
+                                {% endif %}
                             </span>
-                            <button type="button" class="ability-toggle-btn" onclick="toggleAbilityDesc(this)">
-                                <span class="lbl-more" data-i18n="show_more">Show more</span>
-                                <span class="lbl-less" data-i18n="show_less">Show less</span>
-                            </button>
-                        </span>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -234,21 +243,10 @@
     <script src="{% static 'js/spirit-drag.js' %}"></script>
 
     <script>
-        // Розгортає/згортає довгий опис здібності по кліку на кнопку.
-        // Підписи "Show more"/"Show less" - це два окремих <span> з
-        // data-i18n, які завжди лежать в DOM; перемикаємо лише яка з них
-        // видима через CSS-клас .expanded. Завдяки цьому переклад
-        // (setLanguage з translations.js) працює однаково для обох
-        // підписів у будь-якому стані, без ручного підставляння тексту.
-        function toggleAbilityDesc(btn) {
-            const wrapper = btn.closest('.ability-text');
-            const desc = wrapper.querySelector('.ability-desc-collapse');
-            const expanded = desc.classList.toggle('expanded');
-            btn.classList.toggle('expanded', expanded);
-        }
-
-        // Ховає кнопку "Показати більше", якщо опис і так короткий
-        // і не обрізається (влазить у 2 рядки повністю)
+        // Кнопка "Show more" тепер веде на окрему сторінку зі здібностями
+        // (не розгортає текст на місці) - але якщо опис і так короткий
+        // і повністю влазить у 2 рядки, показувати посилання нема сенсу,
+        // тому ховаємо його в цьому випадку.
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.ability-desc-collapse').forEach(function (desc) {
                 const btn = desc.parentElement.querySelector('.ability-toggle-btn');

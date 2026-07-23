@@ -1035,18 +1035,15 @@ td {
     color: #9adcb5;
 }
 
-/* Кнопка тримає в DOM обидва підписи одразу (щоб переклад завжди
-   працював), а видно лише один - залежно від стану .expanded */
-.ability-toggle-btn .lbl-less {
-    display: none;
-}
-
-.ability-toggle-btn.expanded .lbl-more {
-    display: none;
-}
-
-.ability-toggle-btn.expanded .lbl-less {
-    display: inline;
+/* Здібності без опису (Single Attack, Area Attack і т.д.) - той самий
+   рядок ability-row, що й у здібностей з описом, просто нижчий і без
+   тексту - тому вони йдуть в загальному потоці, одна за одною, а не
+   окремим блоком. */
+.ability-icon-only {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    border-radius: 5px;
 }
 
 .ability-name {
@@ -1176,4 +1173,57 @@ td {
     .cat-stats-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* ====================================================
+   СТОРІНКА-ДОВІДНИК УСІХ ЗДІБНОСТЕЙ (/abilities/)
+   Кнопка "Show more" на сторінці кота веде сюди, на конкретний
+   якір #ability-<id>, замість розгортання тексту на місці.
+==================================================== */
+.abilities-page-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ability-page-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.4s ease, border-color 0.4s ease;
+    scroll-margin-top: 130px; /* щоб якір не ховався під fixed-шапкою */
+}
+
+.ability-page-row--highlight {
+    background: rgba(230, 72, 15, 0.28);
+    border-color: #e6480f;
+}
+
+.ability-page-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.ability-page-text {
+    flex: 1;
+}
+
+.ability-page-name {
+    color: #4fb8e0;
+    font-size: 16px;
+    margin: 0 0 4px;
+}
+
+.ability-page-desc {
+    color: #d7ded9;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
 }

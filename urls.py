@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('units/', views.units_menu, name='units_menu'), # Наше основне інтерактивне меню
+    path('abilities/', views.abilities_list, name='abilities_list'),
     # Старе посилання виду /cat/4/ (число) - лишаємо ТОЧНО на тій самій
     # адресі, як і було раніше, тільки тепер це 301-редирект на нову
     # красиву адресу /cat/dark-cat/. Має стояти ПЕРЕД slug-шаблоном

@@ -15,6 +15,10 @@ class Ability(models.Model):
         "Опис (наприклад: 'Deals 1.5x damage, only takes 1/2 damage')",
         blank=True
     )
+    icon_only = models.BooleanField(
+        "Показувати тільки іконку (без опису, в один рядок з іншими такими ж)",
+        default=False
+    )
 
     # Переклади назви й опису здібності на інші мови сайту (EN = поля
     # name/description вище, вони лишаються базовими "за замовчуванням").

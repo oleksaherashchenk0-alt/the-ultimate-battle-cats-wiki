@@ -29,6 +29,12 @@ const DICTIONARY = {
         es: "Forma base",
         ja: "基本形態"
     },
+    abilities_page_title: {
+        en: "Abilities",
+        de: "Fähigkeiten",
+        es: "Habilidades",
+        ja: "能力"
+    },
     site_title: {
         en: "The Battle Cats Wiki",
         de: "Das Battle Cats Wiki",
